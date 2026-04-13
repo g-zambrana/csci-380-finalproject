@@ -20,6 +20,14 @@
     {
       "source": "/home",
       "destination": "/pages/home"
+    },
+    {
+      "source": "/reset-password",
+      "destination": "/pages/reset-password"
+    },
+    {
+      "source": "/update-password",
+      "destination": "/pages/update-password"
     }
   ]
 }
