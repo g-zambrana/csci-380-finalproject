@@ -9,15 +9,15 @@
   ],
   "rewrites": [
     {
-      "source": "/login",
+      "source": "/login.html",
       "destination": "/pages/login.html"
     },
     {
-      "source": "/register",
+      "source": "/register.html",
       "destination": "/pages/register.html"
     },
     {
-      "source": "/home",
+      "source": "/home.html",
       "destination": "/pages/home.html"
     }
   ]
