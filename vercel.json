@@ -1,4 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "redirects": [
     {
@@ -10,15 +11,15 @@
   "rewrites": [
     {
       "source": "/login",
-      "destination": "/pages/login.html"
+      "destination": "/pages/login"
     },
     {
       "source": "/register",
-      "destination": "/pages/register.html"
+      "destination": "/pages/register"
     },
     {
       "source": "/home",
-      "destination": "/pages/home.html"
+      "destination": "/pages/home"
     }
   ]
 }
