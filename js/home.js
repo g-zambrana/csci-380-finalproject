@@ -2,7 +2,7 @@ import { supabase } from './supabase.js';
 
 const logoutBtn = document.getElementById('logoutBtn');
 
-async function checkUser() {
+async function protectHomePage() {
   const { data, error } = await supabase.auth.getSession();
 
   if (error || !data.session) {
@@ -16,4 +16,4 @@ logoutBtn.addEventListener('click', async () => {
   window.location.href = '/login';
 });
 
-checkUser();
+protectHomePage();

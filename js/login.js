@@ -5,6 +5,19 @@ const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const message = document.getElementById('message');
 
+async function startLoginPage() {
+  const { data, error } = await supabase.auth.getSession();
+
+  if (!error && data.session) {
+    window.location.href = '/home';
+    return;
+  }
+
+  document.body.style.visibility = 'visible';
+}
+
+startLoginPage();
+
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
 
@@ -23,6 +36,5 @@ form.addEventListener('submit', async (event) => {
     return;
   }
 
-  message.textContent = 'Login successful!';
   window.location.href = '/home';
 });
