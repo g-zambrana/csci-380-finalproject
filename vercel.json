@@ -14,7 +14,7 @@
       "destination": "/pages/login"
     },
     {
-      "soure":"/mood-tracker",
+      "source":"/mood-tracker",
       "destination":"/pages/mood-tracker"
     },
     {
