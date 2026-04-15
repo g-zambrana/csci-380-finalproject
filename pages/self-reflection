@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reflection</title>
+  <style>
+ <div class="box">
+    <h3>Reflect on your day</h3>
+    <p>What went well? Any challenges?</p>
+
+    <textarea placeholder=""></textarea>
+
+    <div class="buttons">
+      <button>Previous Entries</button>
+      <button>Submit</button>
+    </div>
+  </div>
+
+</body>
+</html>
