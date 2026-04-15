@@ -13,6 +13,9 @@
     <!-- Display mood -->
     <p>Your mood: <span id="moodValue">5</span></p>
 
+    <!--Submit -->
+   <button type="submit">Submit</button>
+
     <script>
         const slider = document.getElementById("moodSlider");
         const output = document.getElementById("moodValue");
@@ -22,6 +25,8 @@
             output.textContent = this.value;
         };
     </script>
+
+
 
 </body>
 </html>
