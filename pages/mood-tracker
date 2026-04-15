@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mood Tracker</title>
+</head>
+<body>
+
+    <h2>How are you feeling today?</h2>
+
+    <!-- Slider -->
+    <input type="range" id="moodSlider" min="1" max="10" value="5">
+
+    <!-- Display mood -->
+    <p>Your mood: <span id="moodValue">5</span></p>
+
+    <script>
+        const slider = document.getElementById("moodSlider");
+        const output = document.getElementById("moodValue");
+
+        // Update text when slider moves
+        slider.oninput = function() {
+            output.textContent = this.value;
+        };
+    </script>
+
+</body>
+</html>
