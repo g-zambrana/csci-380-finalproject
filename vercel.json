@@ -29,6 +29,10 @@
       "source": "/reset-password",
       "destination": "/pages/reset-password"
     },
+     {
+      "source": "/self-reflection",
+      "destination": "/pages/self-reflection"
+    },
     {
       "source": "/update-password",
       "destination": "/pages/update-password"
