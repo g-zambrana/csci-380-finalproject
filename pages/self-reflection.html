@@ -1,54 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <link rel="icon" type="image/x-icon" href="/images/herb.svg">
+<meta charset="UTF-8">
+<title>MindBloom Reflection</title>
 
-  <meta charset="UTF-8">
-  <title>Reflection</title>
-    <link rel="stylesheet" href="/css/style.css" />
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5efe7;
-      display: flex;
-      justify-content: center;
-      margin-top: 80px;
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* Light green gradient */
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+}
+
+/* Logo */
+.logo {
+    font-size: 64px;
+    font-weight: 700;
+    color: #6b8f71;
+    margin-bottom: 25px;
+    animation: fadeSlide 0.8s ease;
+}
+
+/* Card */
+.container {
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    width: 450px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    animation: fadeSlide 1s ease;
+}
+
+h2 {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+/* Textarea */
+textarea {
+    width: 100%;
+    height: 140px;
+    border-radius: 12px;
+    border: none;
+    padding: 15px;
+    font-size: 14px;
+    outline: none;
+    resize: none;
+    background: #f3f3f3;
+    transition: 0.3s;
+}
+
+/* Focus glow */
+textarea:focus {
+    background: white;
+    box-shadow: 0 0 10px rgba(100,200,150,0.5);
+}
+
+/* Buttons row */
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+/* Buttons */
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+/* Previous */
+.prev {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.prev:hover {
+    background: #d5d5d5;
+}
+
+/* Submit */
+.submit {
+    background: #6b8f71;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.submit:hover {
+    background: #5a7c60;
+    transform: translateY(-2px);
+}
+
+/* Animation */
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-25px);
     }
-
-    .box {
-      background: #e9dfd3;
-      padding: 20px;
-      border-radius: 8px;
-      width: 500px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-
-    textarea {
-      width: 100%;
-      height: 120px;
-      margin-top: 10px;
-    }
-
-    .buttons {
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-    }
-  </style>
+}
+</style>
 </head>
+
 <body>
 
-  <div class="box">
-    <h3>Reflect on your day</h3>
-    <p>What went well? Any challenges?</p>
+<!-- MindBloom Logo -->
+<div class="logo">MindBloom</div>
 
-    <textarea placeholder="Write here..."></textarea>
+<div class="container">
+    <h2>Reflect on your day</h2>
+    <p class="subtitle">What went well? Any challenges?</p>
+
+    <textarea id="reflection" placeholder="Write here..."></textarea>
 
     <div class="buttons">
-      <button>Previous Entries</button>
-      <button>Submit</button>
+        <button class="prev" onclick="showEntries()">Previous Entries</button>
+        <button class="submit" onclick="saveReflection()">Submit</button>
     </div>
-  </div>
+</div>
+
+<script>
+function saveReflection() {
+    const text = document.getElementById("reflection").value;
+
+    if (text.trim() === "") {
+        alert("Write something first!");
+        return;
+    }
+
+    let entries = JSON.parse(localStorage.getItem("reflections")) || [];
+
+    const entry = {
+        text: text,
+        date: new Date().toLocaleString()
+    };
+
+    entries.push(entry);
+    localStorage.setItem("reflections", JSON.stringify(entries));
+
+    alert("Reflection saved!");
+    document.getElementById("reflection").value = "";
+}
+
+function showEntries() {
+    let entries = JSON.parse(localStorage.getItem("reflections")) || [];
+
+    if (entries.length === 0) {
+        alert("No previous entries.");
+        return;
+    }
+
+    let output = entries.map(e => 
+        `${e.date}\n${e.text}`
+    ).join("\n\n----------------\n\n");
+
+    alert(output);
+}
+</script>
 
 </body>
 </html>
