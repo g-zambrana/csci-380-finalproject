@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Book a session — MindCare</title>
+<style>
+:root {
+--bg: #f4f6f9;
+--surface: #ffffff;
+--text: #1a2332;
+--muted: #5c6b7f;
+--accent: #3d7a8c;
+--accent-soft: #e8f2f4;
+--border: #d8e0ea;
+--radius: 12px;
+--shadow: 0 4px 24px rgba(26, 35, 50, 0.08);
+font-family: system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+margin: 0;
+min-height: 100vh;
+background: var(--bg);
+color: var(--text);
+line-height: 1.5;
+}
+.app {
+max-width: 560px;
+margin: 0 auto;
+padding: 1.5rem;
+}
+header {
+margin-bottom: 1.5rem;
+}
+header h1 {
+font-size: 1.35rem;
+font-weight: 600;
+margin: 0 0 0.25rem;
+}
+header p {
+margin: 0;
+color: var(--muted);
+font-size: 0.95rem;
+}
+.tabs {
+display: flex;
+gap: 0.5rem;
+margin-bottom: 1rem;
+border-bottom: 1px solid var(--border);
+padding-bottom: 0.5rem;
+}
+.tabs button {
+flex: 1;
+padding: 0.65rem 1rem;
+border: none;
+background: transparent;
+color: var(--muted);
+font-size: 0.95rem;
+font-weight: 500;
+cursor: pointer;
+border-radius: var(--radius) var(--radius) 0 0;
+transition: background 0.15s, color 0.15s;
+}
+.tabs button[aria-selected="true"] {
+background: var(--surface);
+color: var(--accent);
+box-shadow: var(--shadow);
+}
+.tabs button:focus-visible {
+outline: 2px solid var(--accent);
+outline-offset: 2px;
+}
+.panel {
+display: none;
+background: var(--surface);
+padding: 1.25rem;
+border-radius: var(--radius);
+box-shadow: var(--shadow);
+}
+.panel.active {
+display: block;
+}
+label {
+display: block;
+font-size: 0.85rem;
+font-weight: 600;
+margin-bottom: 0.35rem;
+color: var(--text);
+}
+select, input[type="date"], input[type="time"] {
+width: 100%;
+padding: 0.65rem 0.75rem;
+border: 1px solid var(--border);
+border-radius: 8px;
+font-size: 1rem;
+margin-bottom: 1rem;
+background: var(--surface);
+}
+select:focus, input:focus {
+outline: none;
+border-color: var(--accent);
+box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 1rem;
+}
+@media (max-width: 480px) {
+.row { grid-template-columns: 1fr; }
+}
+.btn-primary {
+width: 100%;
+padding: 0.85rem 1rem;
+margin-top: 0.5rem;
+border: none;
+border-radius: 8px;
+background: var(--accent);
+color: #fff;
+font-size: 1rem;
+font-weight: 600;
+cursor: pointer;
+transition: filter 0.15s;
+}
+.btn-primary:hover {
+filter: brightness(1.05);
+}
+.btn-primary:focus-visible {
+outline: 2px solid var(--text);
+outline-offset: 2px;
+}
+.btn-primary:disabled {
+opacity: 0.55;
+cursor: not-allowed;
+}
+.message {
+margin-top: 1rem;
+padding: 0.75rem 1rem;
+border-radius: 8px;
+font-size: 0.9rem;
+display: none;
+}
+.message.show {
+display: block;
+}
+.message.success {
+background: var(--accent-soft);
+color: var(--accent);
+}
+.session-list {
+list-style: none;
+margin: 0;
+padding: 0;
+}
+.session-list li {
+padding: 1rem;
+border: 1px solid var(--border);
+border-radius: 8px;
+margin-bottom: 0.75rem;
+}
+.session-list li:last-child {
+margin-bottom: 0;
+}
+.session-list strong {
+display: block;
+font-size: 1rem;
+}
+.session-list span {
+font-size: 0.9rem;
+color: var(--muted);
+}
+.empty {
+color: var(--muted);
+text-align: center;
+padding: 2rem 1rem;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+<header>
+<h1>Book a therapy session</h1>
+<p>Choose a therapist and time that works for you.</p>
+</header>
+
+<div class="tabs" role="tablist" aria-label="Booking sections">
+<button type="button" role="tab" id="tab-book" aria-selected="true" aria-controls="panel-book">Book</button>
+<button type="button" role="tab" id="tab-upcoming" aria-selected="false" aria-controls="panel-upcoming">Upcoming sessions</button>
+</div>
+
+<section class="panel active" id="panel-book" role="tabpanel" aria-labelledby="tab-book">
+<form id="booking-form" novalidate>
+<label for="therapist">Therapist</label>
+<select id="therapist" name="therapist" required>
+<option value="">Select a therapist</option>
+<option value="Dr. Sarah Chen">Dr. Sarah Chen — CBT</option>
+<option value="James Okonkwo, LCSW">James Okonkwo, LCSW — Trauma-informed</option>
+<option value="Dr. Maria Santos">Dr. Maria Santos — Family therapy</option>
+<option value="Alex Rivera, LMFT">Alex Rivera, LMFT — Couples</option>
+</select>
+
+<div class="row">
+<div>
+<label for="date">Day</label>
+<input type="date" id="date" name="date" required />
+</div>
+<div>
+<label for="time">Time</label>
+<input type="time" id="time" name="time" required />
+</div>
+</div>
+
+<button type="submit" class="btn-primary" id="confirm-btn">Confirm appointment</button>
+<div class="message success" id="feedback"></div>
+</form>
+</section>
+
+<section class="panel" id="panel-upcoming" role="tabpanel" aria-labelledby="tab-upcoming" hidden>
+<ul class="session-list" id="session-list"></ul>
+<p class="empty" id="empty-state">No upcoming sessions yet. Book one in the Book tab.</p>
+</section>
+
+</div>
+
+<script>
+(function () {
+var tabBook = document.getElementById("tab-book");
+var tabUpcoming = document.getElementById("tab-upcoming");
+var panelBook = document.getElementById("panel-book");
+var panelUpcoming = document.getElementById("panel-upcoming");
+var form = document.getElementById("booking-form");
+var feedback = document.getElementById("feedback");
+var sessionList = document.getElementById("session-list");
+var emptyState = document.getElementById("empty-state");
+
+function setTab(active) {
+var isBook = active === "book";
+tabBook.setAttribute("aria-selected", isBook);
+tabUpcoming.setAttribute("aria-selected", !isBook);
+panelBook.classList.toggle("active", isBook);
+panelUpcoming.classList.toggle("active", !isBook);
+panelBook.hidden = !isBook;
+panelUpcoming.hidden = isBook;
+}
+
+tabBook.addEventListener("click", function () { setTab("book"); });
+tabUpcoming.addEventListener("click", function () { setTab("upcoming"); });
+
+function formatWhen(dateStr, timeStr) {
+var d = new Date(dateStr + "T" + timeStr);
+if (isNaN(d.getTime())) return dateStr + " at " + timeStr;
+return d.toLocaleString(undefined, {
+weekday: "long",
+year: "numeric",
+month: "long",
+day: "numeric",
+hour: "numeric",
+minute: "2-digit"
+});
+}
+
+function refreshEmpty() {
+emptyState.hidden = sessionList.children.length > 0;
+}
+
+form.addEventListener("submit", function (e) {
+e.preventDefault();
+
+var therapist = document.getElementById("therapist").value;
+var date = document.getElementById("date").value;
+var time = document.getElementById("time").value;
+
+if (!therapist || !date || !time) {
+feedback.textContent = "Please choose a therapist, day, and time.";
+feedback.classList.add("show");
+return;
+}
+
+var li = document.createElement("li");
+li.innerHTML =
+"<strong>" + therapist.replace(/</g, "&lt;") + "</strong>" +
+"<span>" + formatWhen(date, time) + "</span>";
+
+sessionList.appendChild(li);
+refreshEmpty();
+
+feedback.textContent = "Your appointment is confirmed. You can view it under Upcoming sessions.";
+feedback.classList.add("show");
+
+form.reset();
+setTab("upcoming");
+});
+
+refreshEmpty();
+})();
+</script>
+
+</body>
+</html>
