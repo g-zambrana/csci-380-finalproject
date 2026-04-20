@@ -21,7 +21,7 @@
 
 body {
     min-height: 100vh;
-    background: linear-gradient(to right, #FFF8F0, #ddf2e18d);
+    background: linear-gradient(to right, #ffeedb, #bfffcb8d);
     color: var(--text);
     font-family: 'Nunito', sans-serif;
 }
