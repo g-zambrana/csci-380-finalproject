@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="/images/herb.svg" />
+  <title>Profile Settings — MindBloom</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #F2EFE8;
+      --surface: #FFFFFF;
+      --sidebar: #2D5A3D;
+      --primary: #3D6B35;
+      --accent:  #6BAF61;
+      --border:  rgba(0,0,0,0.08);
+      --text:    #2A2724;
+      --muted:   #7A7870;
+      --danger:  #e74c3c;
+      --shadow:  0 1px 4px rgba(0,0,0,0.07), 0 0 0 0.5px rgba(0,0,0,0.05);
+      --shadow-hover: 0 6px 18px rgba(0,0,0,0.10);
+      --radius:  12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg); color: var(--text);
+      display: flex; min-height: 100vh; font-size: 14px;
+    }
+
+    /* ── SIDEBAR (shared) ─────────────────────── */
+    .sidebar {
+      width: 230px; min-height: 100vh; background: var(--sidebar);
+      display: flex; flex-direction: column; flex-shrink: 0;
+      position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    }
+    .sb-logo {
+      display: flex; align-items: center; gap: 10px; padding: 20px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.1); text-decoration: none;
+    }
+    .sb-mark {
+      width: 34px; height: 34px; background: rgba(255,255,255,0.14);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .sb-name  { font-size: 16px; font-weight: 700; color: #fff; }
+    .sb-sub   { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.09em; margin-top: 2px; }
+    .sb-nav   { flex: 1; padding: 10px; }
+    .sb-label {
+      font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.3);
+      text-transform: uppercase; letter-spacing: 0.1em; padding: 12px 8px 5px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 9px; padding: 9px 10px;
+      border-radius: 8px; cursor: pointer; color: rgba(255,255,255,0.62);
+      font-size: 13px; font-weight: 500; margin-bottom: 2px;
+      transition: background 0.12s, color 0.12s; text-decoration: none;
+    }
+    .nav-item:hover  { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.9); }
+    .nav-item.active { background: rgba(255,255,255,0.15); color: #fff; }
+    .nav-item svg    { width: 15px; height: 15px; flex-shrink: 0; }
+    .sb-user {
+      padding: 14px 18px; border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; gap: 10px; cursor: pointer;
+    }
+    .sb-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .sb-uname  { font-size: 12px; font-weight: 700; color: #fff; }
+    .sb-uemail { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+
+    /* ── MAIN ─────────────────────────────────── */
+    .main { flex: 1; padding: 28px 36px 48px; min-width: 0; max-width: 760px; }
+
+    .page-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px; font-weight: 500;
+    }
+    .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .btn-logout {
+      padding: 7px 14px; background: rgba(0,0,0,0.06);
+      border: 1px solid var(--border); border-radius: 8px;
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      cursor: pointer; transition: background 0.12s;
+    }
+    .btn-logout:hover { background: rgba(0,0,0,0.10); }
+
+    /* ── AVATAR SECTION ───────────────────────── */
+    .avatar-row {
+      display: flex; align-items: center; gap: 18px;
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .profile-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; font-weight: 700; color: #fff; flex-shrink: 0;
+      overflow: hidden;
+    }
+    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar-info h2 { font-size: 18px; font-weight: 700; }
+    .avatar-info p  { font-size: 13px; color: var(--muted); margin-top: 3px; }
+    .avatar-actions { margin-left: auto; display: flex; gap: 8px; }
+
+    /* ── TABS ─────────────────────────────────── */
+    .tabs {
+      display: flex; gap: 4px;
+      border-bottom: 2px solid var(--border); margin-bottom: 22px;
+    }
+    .tab-btn {
+      padding: 9px 18px; border: none; background: none;
+      color: var(--muted); font-size: 13px; font-weight: 600;
+      cursor: pointer; border-radius: 8px 8px 0 0;
+      transition: background 0.12s, color 0.12s; font-family: inherit;
+    }
+    .tab-btn:hover { background: rgba(0,0,0,0.04); color: var(--text); }
+    .tab-btn[aria-selected="true"] {
+      background: var(--surface); color: var(--primary);
+      box-shadow: 0 -1px 4px rgba(0,0,0,0.06);
+      border-bottom: 2px solid var(--surface); margin-bottom: -2px;
+    }
+    .panel { display: none; }
+    .panel[aria-selected="true"] { display: block; }
+
+    /* ── FORM CARDS ───────────────────────────── */
+    .card {
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 22px 24px; margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 14px; font-weight: 700; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title span { color: var(--muted); font-weight: 400; font-size: 12px; }
+
+    .form-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+    .form-grid.single { grid-template-columns: 1fr; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field.full { grid-column: 1 / -1; }
+    label { font-size: 12px; font-weight: 700; color: var(--muted); }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="password"],
+    select, textarea {
+      padding: 9px 12px;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      font-family: inherit; font-size: 13px; color: var(--text);
+      background: var(--bg); outline: none;
+      transition: border-color 0.12s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); background: #fff; }
+    input[readonly] { background: #f8f7f4; color: var(--muted); cursor: not-allowed; }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* ── GOALS TAGS ───────────────────────────── */
+    .goals-wrap {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 10px; border: 1.5px solid var(--border); border-radius: 8px;
+      background: var(--bg); min-height: 44px;
+    }
+    .goal-tag {
+      display: flex; align-items: center; gap: 5px;
+      background: #E8F5E9; border: 1px solid #a5d6a7;
+      color: #2E7D32; border-radius: 20px;
+      font-size: 12px; font-weight: 600; padding: 4px 10px;
+    }
+    .goal-tag button {
+      background: none; border: none; cursor: pointer; color: #2E7D32;
+      font-size: 14px; line-height: 1; padding: 0; margin-left: 2px;
+    }
+    .goals-input-row { display: flex; gap: 8px; margin-top: 8px; }
+    .goals-input-row input { flex: 1; }
+    .btn-add-goal {
+      padding: 9px 16px; background: var(--primary); color: #fff;
+      border: none; border-radius: 8px; font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+    }
+
+    /* ── BUTTONS ──────────────────────────────── */
+    .btn-row { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+    .btn-primary {
+      padding: 9px 22px; background: var(--primary); color: #fff;
+      border: none; border-radius: 8px; font-size: 13px; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: opacity 0.12s;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-ghost {
+      padding: 9px 18px; background: transparent;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: 13px; font-weight: 600; color: var(--muted);
+      cursor: pointer; font-family: inherit; transition: background 0.12s;
+    }
+    .btn-ghost:hover { background: rgba(0,0,0,0.04); }
+    .btn-danger {
+      padding: 9px 18px; background: transparent;
+      border: 1.5px solid #e74c3c; border-radius: 8px;
+      font-size: 13px; font-weight: 600; color: var(--danger);
+      cursor: pointer; font-family: inherit; transition: background 0.12s;
+    }
+    .btn-danger:hover { background: #fdecea; }
+
+    /* ── TOAST / FEEDBACK ─────────────────────── */
+    #toast {
+      position: fixed; bottom: 28px; right: 28px;
+      padding: 12px 20px; border-radius: 10px;
+      font-size: 13px; font-weight: 600; color: #fff;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      transform: translateY(20px); opacity: 0;
+      transition: all 0.25s;
+      pointer-events: none; z-index: 1000;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.success { background: var(--primary); }
+    #toast.error   { background: var(--danger); }
+
+    /* ── DANGER ZONE ──────────────────────────── */
+    .danger-zone {
+      border: 1.5px solid #fad7d7; border-radius: var(--radius);
+      padding: 20px 24px; margin-top: 4px;
+    }
+    .danger-zone h3 { font-size: 14px; font-weight: 700; color: var(--danger); margin-bottom: 8px; }
+    .danger-zone p  { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+
+    /* ── LOADING ──────────────────────────────── */
+    .skeleton {
+      background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+      background-size: 200% 100%; animation: shimmer 1.4s infinite;
+      border-radius: 6px; min-height: 14px;
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+    .field-loading input, .field-loading select, .field-loading textarea {
+      background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+      background-size: 200% 100%; animation: shimmer 1.4s infinite;
+    }
+
+    /* ── PASSWORD STRENGTH ────────────────────── */
+    .pw-strength { height: 4px; border-radius: 2px; margin-top: 5px; transition: all 0.3s; }
+    .pw-hint     { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────────────────── -->
+<nav class="sidebar">
+  <a class="sb-logo" href="/home">
+    <div class="sb-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" width="18">
+        <path d="M12 22V12M12 12C12 7 7 4 3 6M12 12C12 7 17 4 21 6"/>
+      </svg>
+    </div>
+    <div>
+      <div class="sb-name">MindBloom</div>
+      <div class="sb-sub">Therapal</div>
+    </div>
+  </a>
+
+  <div class="sb-nav">
+    <div class="sb-label">Main</div>
+    <a class="nav-item" href="/home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" href="/mood-tracker">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+      Mood Tracker
+    </a>
+    <a class="nav-item" href="/self-reflection">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Journal
+    </a>
+    <a class="nav-item" href="/therapist">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Therapists
+    </a>
+
+    <div class="sb-label" style="margin-top:6px;">More</div>
+    <a class="nav-item" href="/resources">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Resources
+    </a>
+    <a class="nav-item active" href="/profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile Settings
+    </a>
+  </div>
+
+  <div class="sb-user">
+    <div class="sb-avatar" id="avatar-initials">?</div>
+    <div>
+      <div class="sb-uname"  id="sb-username">Loading…</div>
+      <div class="sb-uemail" id="sb-useremail"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN CONTENT ────────────────────────────────── -->
+<main class="main">
+  <div class="page-header">
+    <div>
+      <h1>Profile Settings</h1>
+      <p class="page-sub">Manage your account information, preferences, and security.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-logout" id="logoutBtn">Sign out</button>
+    </div>
+  </div>
+
+  <!-- Avatar / name card -->
+  <div class="avatar-row">
+    <div class="profile-avatar" id="profile-avatar-large">?</div>
+    <div class="avatar-info">
+      <h2 id="profile-display-name">Loading…</h2>
+      <p  id="profile-email-display">—</p>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" role="tablist">
+    <button class="tab-btn" role="tab" aria-selected="true"  data-panel="panel-personal">👤 Personal Info</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-panel="panel-preferences">⚙️ Preferences</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-panel="panel-security">🔒 Security</button>
+  </div>
+
+  <!-- ── TAB: PERSONAL INFO ──────────────────────────── -->
+  <div class="panel" aria-selected="true" id="panel-personal">
+    <div class="card">
+      <div class="card-title">Basic Information <span>Changes update your public profile.</span></div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="full-name">Full Name</label>
+          <input type="text" id="full-name" placeholder="Jane Doe" />
+        </div>
+        <div class="field">
+          <label for="display-name">Display Name</label>
+          <input type="text" id="display-name" placeholder="How you'd like to be greeted" />
+        </div>
+        <div class="field">
+          <label for="email-field">Email Address</label>
+          <input type="email" id="email-field" readonly title="Contact support to change your email." />
+        </div>
+        <div class="field">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="+1 (555) 000-0000" />
+        </div>
+        <div class="field">
+          <label for="dob">Date of Birth</label>
+          <input type="date" id="dob" />
+        </div>
+        <div class="field">
+          <label for="timezone">Timezone</label>
+          <select id="timezone">
+            <option value="America/New_York">Eastern Time (ET)</option>
+            <option value="America/Chicago">Central Time (CT)</option>
+            <option value="America/Denver">Mountain Time (MT)</option>
+            <option value="America/Los_Angeles">Pacific Time (PT)</option>
+            <option value="America/Anchorage">Alaska Time (AKT)</option>
+            <option value="Pacific/Honolulu">Hawaii Time (HT)</option>
+            <option value="Europe/London">London (GMT/BST)</option>
+            <option value="Europe/Paris">Paris (CET)</option>
+            <option value="Asia/Tokyo">Tokyo (JST)</option>
+            <option value="Australia/Sydney">Sydney (AEST)</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ghost" id="cancel-personal">Cancel</button>
+        <button class="btn-primary" id="save-personal">Save Changes</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Emergency Contact <span>Used only in case of crisis.</span></div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="ec-name">Contact Name</label>
+          <input type="text" id="ec-name" placeholder="Full name" />
+        </div>
+        <div class="field">
+          <label for="ec-phone">Contact Phone</label>
+          <input type="tel" id="ec-phone" placeholder="+1 (555) 000-0000" />
+        </div>
+        <div class="field full">
+          <label for="ec-rel">Relationship</label>
+          <input type="text" id="ec-rel" placeholder="e.g. Parent, Partner, Friend" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" id="save-emergency">Save Emergency Contact</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: PREFERENCES ───────────────────────────── -->
+  <div class="panel" aria-selected="false" id="panel-preferences">
+    <div class="card">
+      <div class="card-title">Therapy Goals <span>What are you working toward?</span></div>
+      <div class="goals-wrap" id="goals-wrap">
+        <!-- goal tags injected here -->
+      </div>
+      <div class="goals-input-row">
+        <input type="text" id="goal-input" placeholder="e.g. Reduce anxiety, Better sleep…" maxlength="50" />
+        <button class="btn-add-goal" id="add-goal-btn">+ Add</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" id="save-goals">Save Goals</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Communication Preferences</div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="pref-lang">Preferred Language</label>
+          <select id="pref-lang">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="zh">Chinese (Simplified)</option>
+            <option value="ja">Japanese</option>
+            <option value="pt">Portuguese</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="referral">How did you hear about us?</label>
+          <input type="text" id="referral" placeholder="e.g. Friend, Social media, Web search" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" id="save-prefs">Save Preferences</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: SECURITY ──────────────────────────────── -->
+  <div class="panel" aria-selected="false" id="panel-security">
+    <div class="card">
+      <div class="card-title">Change Password</div>
+      <div class="form-grid single">
+        <div class="field">
+          <label for="pw-new">New Password</label>
+          <input type="password" id="pw-new" placeholder="At least 8 characters" autocomplete="new-password" />
+          <div class="pw-strength" id="pw-strength"></div>
+          <div class="pw-hint"    id="pw-hint"></div>
+        </div>
+        <div class="field">
+          <label for="pw-confirm">Confirm New Password</label>
+          <input type="password" id="pw-confirm" placeholder="Repeat password" autocomplete="new-password" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" id="save-password">Update Password</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Account Information</div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Account Email</label>
+          <input type="email" id="sec-email" readonly />
+        </div>
+        <div class="field">
+          <label>Account Created</label>
+          <input type="text" id="sec-created" readonly />
+        </div>
+        <div class="field">
+          <label>Last Sign-In</label>
+          <input type="text" id="sec-lastlogin" readonly />
+        </div>
+        <div class="field">
+          <label>Account Role</label>
+          <input type="text" id="sec-role" readonly />
+        </div>
+      </div>
+    </div>
+
+    <div class="danger-zone">
+      <h3>⚠️ Danger Zone</h3>
+      <p>Signing out will end your current session on this device. All your data is safely stored in the cloud.</p>
+      <button class="btn-danger" id="danger-signout">Sign Out of All Devices</button>
+    </div>
+  </div>
+</main>
+
+<!-- Toast notification -->
+<div id="toast"></div>
+
+<script type="module" src="../js/profile.js"></script>
+</body>
+</html>

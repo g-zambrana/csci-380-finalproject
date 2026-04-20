@@ -1,187 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>MindBloom Reflection</title>
-
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
-}
-
-body {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    /* Light green gradient */
-    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-}
-
-/* Logo */
-.logo {
-    font-size: 64px;
-    font-weight: 700;
-    color: #6b8f71;
-    margin-bottom: 25px;
-    animation: fadeSlide 0.8s ease;
-}
-
-/* Card */
-.container {
-    background: white;
-    border-radius: 20px;
-    padding: 35px;
-    width: 450px;
-    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
-    animation: fadeSlide 1s ease;
-}
-
-h2 {
-    margin-bottom: 5px;
-    color: #333;
-}
-
-.subtitle {
-    font-size: 14px;
-    margin-bottom: 20px;
-    color: #666;
-}
-
-/* Textarea */
-textarea {
-    width: 100%;
-    height: 140px;
-    border-radius: 12px;
-    border: none;
-    padding: 15px;
-    font-size: 14px;
-    outline: none;
-    resize: none;
-    background: #f3f3f3;
-    transition: 0.3s;
-}
-
-/* Focus glow */
-textarea:focus {
-    background: white;
-    box-shadow: 0 0 10px rgba(100,200,150,0.5);
-}
-
-/* Buttons row */
-.buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-}
-
-/* Buttons */
-button {
-    padding: 10px 18px;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: 0.3s;
-}
-
-/* Previous */
-.prev {
-    background: #e0e0e0;
-    color: #333;
-}
-
-.prev:hover {
-    background: #d5d5d5;
-}
-
-/* Submit */
-.submit {
-    background: #6b8f71;
-    color: white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.submit:hover {
-    background: #5a7c60;
-    transform: translateY(-2px);
-}
-
-/* Animation */
-@keyframes fadeSlide {
-    from {
-        opacity: 0;
-        transform: translateY(-25px);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="/images/herb.svg" />
+  <title>Journal — MindBloom</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Playfair+Display:wght@500&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #F2EFE8; --surface: #fff; --sidebar: #2D5A3D;
+      --primary: #3D6B35; --border: rgba(0,0,0,0.08);
+      --text:    #2A2724; --muted: #7A7870; --radius: 12px;
+      --shadow:  0 1px 4px rgba(0,0,0,0.07), 0 0 0 0.5px rgba(0,0,0,0.05);
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-</style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; font-size: 14px; }
+
+    /* Sidebar */
+    .sidebar { width: 230px; min-height: 100vh; background: var(--sidebar); display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sb-logo { display: flex; align-items: center; gap: 10px; padding: 20px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); text-decoration: none; }
+    .sb-mark { width: 34px; height: 34px; background: rgba(255,255,255,0.14); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sb-name { font-size: 16px; font-weight: 700; color: #fff; }
+    .sb-sub  { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.09em; margin-top: 2px; }
+    .sb-nav  { flex: 1; padding: 10px; }
+    .sb-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.1em; padding: 12px 8px 5px; }
+    .nav-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 8px; color: rgba(255,255,255,0.62); font-size: 13px; font-weight: 500; margin-bottom: 2px; transition: background 0.12s, color 0.12s; text-decoration: none; }
+    .nav-item:hover  { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.9); }
+    .nav-item.active { background: rgba(255,255,255,0.15); color: #fff; }
+    .nav-item svg    { width: 15px; height: 15px; flex-shrink: 0; }
+    .sb-user { padding: 14px 18px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .sb-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .sb-uname  { font-size: 12px; font-weight: 700; color: #fff; }
+    .sb-uemail { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+
+    /* Main */
+    .main { flex: 1; padding: 28px 36px 48px; min-width: 0; max-width: 760px; }
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+    h1 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 500; }
+    .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+    .btn-logout { padding: 7px 14px; background: rgba(0,0,0,0.06); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; transition: background 0.12s; flex-shrink: 0; }
+    .btn-logout:hover { background: rgba(0,0,0,0.10); }
+
+    /* Content */
+    .card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px 28px; margin-bottom: 20px; }
+    .card-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; color: var(--text); }
+    .prompt-box { display: none; background: #f0f7ee; border-left: 4px solid var(--primary); border-radius: 8px; padding: 14px 16px; margin-bottom: 20px; gap: 12px; align-items: flex-start; }
+    .prompt-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 4px; }
+    .prompt-text { font-size: 13px; color: var(--text); font-style: italic; line-height: 1.5; flex: 1; }
+    .btn-use-prompt { flex-shrink: 0; padding: 6px 12px; background: var(--primary); color: #fff; border: none; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: filter 0.15s; }
+    .btn-use-prompt:hover { filter: brightness(1.1); }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 6px; }
+    .field input[type="text"], .field select { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.15s; background: #fff; }
+    .field input:focus, .field select:focus { border-color: var(--primary); }
+    .journal-textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-family: 'Lora', serif; font-size: 15px; line-height: 1.7; resize: vertical; min-height: 200px; outline: none; transition: border-color 0.15s; }
+    .journal-textarea:focus { border-color: var(--primary); }
+    .textarea-footer { display: flex; justify-content: flex-end; gap: 12px; font-size: 11px; color: var(--muted); margin-top: 5px; }
+    .btn-submit { width: 100%; padding: 13px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: filter 0.15s, opacity 0.15s; margin-top: 4px; }
+    .btn-submit:hover:not(:disabled) { filter: brightness(1.08); }
+    .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+    #statusMessage { margin-top: 10px; font-size: 13px; font-weight: 600; min-height: 20px; }
+    .search-row { display: flex; gap: 10px; margin-bottom: 16px; }
+    .search-row input { flex: 1; border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 13px; font-family: inherit; outline: none; transition: border-color 0.15s; }
+    .search-row input:focus { border-color: var(--primary); }
+    .entry-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; transition: box-shadow 0.15s; }
+    .entry-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.09); }
+    .entry-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .entry-title  { font-size: 15px; font-weight: 700; }
+    .entry-meta   { font-size: 11px; color: var(--muted); margin-top: 3px; }
+    .entry-preview { font-family: 'Lora', serif; font-size: 13px; color: #555; line-height: 1.55; }
+    .btn-delete { background: none; border: none; cursor: pointer; color: #ccc; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: color 0.12s, background 0.12s; flex-shrink: 0; }
+    .btn-delete:hover { color: #c0392b; background: #fdecea; }
+    .loading-text { font-size: 13px; color: var(--muted); }
+  </style>
 </head>
-
 <body>
 
-<!-- MindBloom Logo -->
-<div class="logo">MindBloom</div>
+<nav class="sidebar">
+  <a class="sb-logo" href="/home">
+    <div class="sb-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" width="18"><path d="M12 22V12M12 12C12 7 7 4 3 6M12 12C12 7 17 4 21 6"/></svg></div>
+    <div><div class="sb-name">MindBloom</div><div class="sb-sub">Therapal</div></div>
+  </a>
+  <div class="sb-nav">
+    <div class="sb-label">Main</div>
+    <a class="nav-item" href="/home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+    <a class="nav-item" href="/mood-tracker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>Mood Tracker</a>
+    <a class="nav-item active" href="/self-reflection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Journal</a>
+    <a class="nav-item" href="/therapist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Therapists</a>
+    <div class="sb-label" style="margin-top:6px;">More</div>
+    <a class="nav-item" href="/resources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Resources</a>
+    <a class="nav-item" href="/profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile Settings</a>
+  </div>
+  <div class="sb-user">
+    <div class="sb-avatar" id="avatar-initials">?</div>
+    <div><div class="sb-uname" id="sb-username">Loading…</div><div class="sb-uemail" id="sb-useremail"></div></div>
+  </div>
+</nav>
 
-<div class="container">
-    <h2>Reflect on your day</h2>
-    <p class="subtitle">What went well? Any challenges?</p>
-
-    <textarea id="reflection" placeholder="Write here..."></textarea>
-
-    <div class="buttons">
-<button class="prev" onclick="window.location.href='previousentries.html'">
-    Previous Entries
-</button>        <button class="submit" onclick="saveReflection()">Submit</button>
+<main class="main">
+  <div class="page-header">
+    <div>
+      <h1>Self-Reflection Journal</h1>
+      <p class="page-sub">Your private space to write, reflect, and grow. All entries are saved securely.</p>
     </div>
-</div>
+    <button class="btn-logout" id="logoutBtn">Sign out</button>
+  </div>
 
-<script>
-function saveReflection() {
-    const text = document.getElementById("reflection").value;
+  <div class="prompt-box" id="promptBox">
+    <div style="flex:1;">
+      <div class="prompt-label">✨ Today's Prompt</div>
+      <div class="prompt-text" id="promptText"></div>
+    </div>
+    <button class="btn-use-prompt" id="usePromptBtn">Use this →</button>
+  </div>
 
-    if (text.trim() === "") {
-        alert("Write something first!");
-        return;
-    }
+  <div class="card">
+    <div class="card-title">New Entry</div>
+    <div class="field">
+      <label>Title (optional)</label>
+      <input type="text" id="entryTitle" placeholder="Give this entry a title…" />
+    </div>
+    <div class="field">
+      <label>How are you feeling?</label>
+      <select id="entryMood">
+        <option value="">— Select mood —</option>
+        <option value="very_bad">😢 Very Bad</option>
+        <option value="bad">😕 Bad</option>
+        <option value="neutral">😐 Neutral</option>
+        <option value="good">🙂 Good</option>
+        <option value="very_good">😄 Very Good</option>
+      </select>
+    </div>
+    <textarea class="journal-textarea" id="entryBody" placeholder="What's on your mind today? Write freely — this is your private space…"></textarea>
+    <div class="textarea-footer">
+      <span id="charCount">0 chars</span>
+      <span id="wordCount">0 words</span>
+    </div>
+    <button class="btn-submit" id="submitEntry">Save Entry</button>
+    <p id="statusMessage"></p>
+  </div>
 
-    let entries = JSON.parse(localStorage.getItem("reflections")) || [];
+  <div class="card">
+    <div class="card-title">Your Entries</div>
+    <div class="search-row">
+      <input type="text" id="searchInput" placeholder="Search entries…" />
+    </div>
+    <div id="entriesList"><p class="loading-text">Loading…</p></div>
+  </div>
+</main>
 
-    const entry = {
-        text: text,
-        date: new Date().toLocaleString()
-    };
-
-    entries.push(entry);
-    localStorage.setItem("reflections", JSON.stringify(entries));
-
-    alert("Reflection saved!");
-    document.getElementById("reflection").value = "";
-}
-
-function showEntries() {
-    let entries = JSON.parse(localStorage.getItem("reflections")) || [];
-
-    if (entries.length === 0) {
-        alert("No previous entries.");
-        return;
-    }
-
-    let output = entries.map(e => 
-        `${e.date}\n${e.text}`
-    ).join("\n\n----------------\n\n");
-
-    alert(output);
-}
-</script>
-
+<script type="module" src="../js/journal.js"></script>
 </body>
 </html>

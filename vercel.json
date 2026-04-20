@@ -9,37 +9,16 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/login",
-      "destination": "/pages/login"
-    },
-    {
-      "source":"/mood-tracker",
-      "destination":"/pages/mood-tracker"
-    },
-    {
-      "source": "/register",
-      "destination": "/pages/register"
-    },
-    {
-      "source": "/home",
-      "destination": "/pages/home"
-    },
-    {
-      "source": "/reset-password",
-      "destination": "/pages/reset-password"
-    },
-     {
-      "source": "/self-reflection",
-      "destination": "/pages/self-reflection"
-    },
-     {
-      "source": "/previousentries",
-      "destination": "/pages/previousentries"
-    },
-    {
-      "source": "/update-password",
-      "destination": "/pages/update-password"
-    }
+    { "source": "/login",           "destination": "/pages/login"           },
+    { "source": "/register",        "destination": "/pages/register"        },
+    { "source": "/reset-password",  "destination": "/pages/reset-password"  },
+    { "source": "/update-password", "destination": "/pages/update-password" },
+    { "source": "/home",            "destination": "/pages/home"            },
+    { "source": "/mood-tracker",    "destination": "/pages/mood-tracker"    },
+    { "source": "/self-reflection", "destination": "/pages/self-reflection" },
+    { "source": "/previousentries", "destination": "/pages/previousentries" },
+    { "source": "/therapist",       "destination": "/pages/therapist"       },
+    { "source": "/resources",       "destination": "/pages/resources"       },
+    { "source": "/profile",         "destination": "/pages/profile"         }
   ]
 }

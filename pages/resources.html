@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="/images/herb.svg" />
+  <title>Resources — MindBloom</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #F2EFE8;
+      --surface: #FFFFFF;
+      --sidebar: #2D5A3D;
+      --primary: #3D6B35;
+      --accent:  #6BAF61;
+      --border:  rgba(0,0,0,0.08);
+      --text:    #2A2724;
+      --muted:   #7A7870;
+      --shadow:  0 1px 4px rgba(0,0,0,0.07), 0 0 0 0.5px rgba(0,0,0,0.05);
+      --shadow-hover: 0 6px 18px rgba(0,0,0,0.10);
+      --radius:  12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+      font-size: 14px;
+    }
+
+    /* ── SIDEBAR (shared) ─────────────────────── */
+    .sidebar {
+      width: 230px; min-height: 100vh;
+      background: var(--sidebar);
+      display: flex; flex-direction: column; flex-shrink: 0;
+      position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    }
+    .sb-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 20px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      text-decoration: none;
+    }
+    .sb-mark {
+      width: 34px; height: 34px;
+      background: rgba(255,255,255,0.14); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .sb-name  { font-size: 16px; font-weight: 700; color: #fff; }
+    .sb-sub   { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.09em; margin-top: 2px; }
+    .sb-nav   { flex: 1; padding: 10px; }
+    .sb-label {
+      font-size: 10px; font-weight: 600;
+      color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 12px 8px 5px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 9px 10px; border-radius: 8px; cursor: pointer;
+      color: rgba(255,255,255,0.62); font-size: 13px; font-weight: 500;
+      margin-bottom: 2px; transition: background 0.12s, color 0.12s;
+      text-decoration: none;
+    }
+    .nav-item:hover  { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.9); }
+    .nav-item.active { background: rgba(255,255,255,0.15); color: #fff; }
+    .nav-item svg    { width: 15px; height: 15px; flex-shrink: 0; }
+    .sb-user {
+      padding: 14px 18px; border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; gap: 10px; cursor: pointer;
+    }
+    .sb-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .sb-uname  { font-size: 12px; font-weight: 700; color: #fff; }
+    .sb-uemail { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+
+    /* ── MAIN ─────────────────────────────────── */
+    .main { flex: 1; padding: 28px 36px 48px; min-width: 0; }
+
+    .page-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px; font-weight: 500;
+    }
+    .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .btn-logout {
+      padding: 7px 14px;
+      background: rgba(0,0,0,0.06); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 12px; font-weight: 600;
+      color: var(--muted); cursor: pointer; transition: background 0.12s;
+    }
+    .btn-logout:hover { background: rgba(0,0,0,0.10); }
+
+    /* ── FILTER BAR ───────────────────────────── */
+    .filter-bar {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 24px; align-items: center;
+    }
+    .filter-btn {
+      padding: 6px 14px; border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--surface); font-size: 12px; font-weight: 600;
+      color: var(--muted); cursor: pointer; transition: all 0.12s;
+      font-family: inherit;
+    }
+    .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-btn.active {
+      background: var(--primary); border-color: var(--primary);
+      color: #fff;
+    }
+    .search-wrap {
+      margin-left: auto;
+      position: relative;
+    }
+    .search-wrap svg {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); pointer-events: none;
+    }
+    #res-search {
+      padding: 7px 12px 7px 34px;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      font-family: inherit; font-size: 13px; color: var(--text);
+      background: var(--surface); outline: none;
+      transition: border-color 0.12s; width: 220px;
+    }
+    #res-search:focus { border-color: var(--primary); }
+
+    /* ── FEATURED BANNER ──────────────────────── */
+    .featured-section { margin-bottom: 28px; }
+    .section-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted); margin-bottom: 12px;
+    }
+    .featured-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    }
+    @media (max-width: 900px) { .featured-grid { grid-template-columns: repeat(2,1fr); } }
+
+    /* ── RESOURCE CARDS ───────────────────────── */
+    .resource-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .resource-card {
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: box-shadow 0.15s, transform 0.15s;
+      text-decoration: none; color: inherit;
+    }
+    .resource-card:hover {
+      box-shadow: var(--shadow-hover); transform: translateY(-2px);
+    }
+    .card-thumb {
+      height: 110px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 42px;
+    }
+    .card-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    .card-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; padding: 3px 8px; border-radius: 20px;
+      width: fit-content;
+    }
+    .badge-article   { background: #E8F5E9; color: #2E7D32; }
+    .badge-video     { background: #E3F2FD; color: #1565C0; }
+    .badge-exercise  { background: #FFF3E0; color: #E65100; }
+    .badge-audio     { background: #F3E5F5; color: #6A1B9A; }
+    .badge-worksheet { background: #FFF8E1; color: #F57F17; }
+    .card-title { font-size: 14px; font-weight: 700; line-height: 1.3; }
+    .card-desc  { font-size: 12px; color: var(--muted); line-height: 1.5; flex: 1; }
+    .card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+    }
+    .card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+    .tag {
+      font-size: 10px; padding: 2px 7px; border-radius: 10px;
+      background: var(--bg); color: var(--muted); font-weight: 600;
+    }
+    .card-link {
+      font-size: 12px; font-weight: 700; color: var(--primary);
+      display: flex; align-items: center; gap: 4px; white-space: nowrap;
+      text-decoration: none;
+    }
+    .card-link:hover { text-decoration: underline; }
+
+    /* featured card variant */
+    .resource-card.featured .card-thumb { height: 130px; }
+    .resource-card.featured .card-title { font-size: 15px; }
+
+    /* ── CRISIS BANNER ────────────────────────── */
+    .crisis-banner {
+      background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+      border: 1.5px solid #f48fb1;
+      border-radius: var(--radius); padding: 18px 22px;
+      margin-bottom: 28px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .crisis-icon { font-size: 24px; flex-shrink: 0; }
+    .crisis-body h3 { font-size: 15px; font-weight: 700; color: #880e4f; margin-bottom: 6px; }
+    .crisis-body p  { font-size: 13px; color: #6d1230; line-height: 1.55; }
+    .crisis-links { display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+    .crisis-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 700; color: #880e4f;
+      text-decoration: none; padding: 5px 12px;
+      border: 1.5px solid #f48fb1; border-radius: 20px;
+      background: rgba(255,255,255,0.5);
+      transition: background 0.12s;
+    }
+    .crisis-link:hover { background: rgba(255,255,255,0.8); }
+
+    /* ── EMPTY / LOADING ──────────────────────── */
+    .empty-state {
+      text-align: center; padding: 48px 24px; color: var(--muted);
+      grid-column: 1/-1;
+    }
+    .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-state p { font-size: 13px; line-height: 1.6; }
+    .skeleton {
+      background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+      background-size: 200% 100%; animation: shimmer 1.4s infinite;
+      border-radius: 6px; color: transparent !important;
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────────────────── -->
+<nav class="sidebar">
+  <a class="sb-logo" href="/home">
+    <div class="sb-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" width="18">
+        <path d="M12 22V12M12 12C12 7 7 4 3 6M12 12C12 7 17 4 21 6"/>
+      </svg>
+    </div>
+    <div>
+      <div class="sb-name">MindBloom</div>
+      <div class="sb-sub">Therapal</div>
+    </div>
+  </a>
+
+  <div class="sb-nav">
+    <div class="sb-label">Main</div>
+    <a class="nav-item" href="/home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" href="/mood-tracker">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+      Mood Tracker
+    </a>
+    <a class="nav-item" href="/self-reflection">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Journal
+    </a>
+    <a class="nav-item" href="/therapist">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Therapists
+    </a>
+
+    <div class="sb-label" style="margin-top:6px;">More</div>
+    <a class="nav-item active" href="/resources">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Resources
+    </a>
+    <a class="nav-item" href="/profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile Settings
+    </a>
+  </div>
+
+  <div class="sb-user">
+    <div class="sb-avatar" id="avatar-initials">?</div>
+    <div>
+      <div class="sb-uname"  id="sb-username">Loading…</div>
+      <div class="sb-uemail" id="sb-useremail"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN CONTENT ────────────────────────────────── -->
+<main class="main">
+  <div class="page-header">
+    <div>
+      <h1>Resources</h1>
+      <p class="page-sub">Articles, exercises, and tools to support your mental wellbeing.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-logout" id="logoutBtn">Sign out</button>
+    </div>
+  </div>
+
+  <!-- Crisis support banner (always visible) -->
+  <div class="crisis-banner">
+    <div class="crisis-icon">🆘</div>
+    <div class="crisis-body">
+      <h3>Need immediate support?</h3>
+      <p>If you or someone you know is in crisis, please reach out to a helpline right away. You are not alone.</p>
+      <div class="crisis-links">
+        <a class="crisis-link" href="tel:988" target="_blank">📞 988 Suicide &amp; Crisis Lifeline</a>
+        <a class="crisis-link" href="https://www.crisistextline.org/" target="_blank">💬 Crisis Text Line (Text HOME to 741741)</a>
+        <a class="crisis-link" href="https://www.samhsa.gov/find-help/national-helpline" target="_blank">🏥 SAMHSA Helpline</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="article">📄 Articles</button>
+    <button class="filter-btn" data-filter="video">🎥 Videos</button>
+    <button class="filter-btn" data-filter="exercise">🧘 Exercises</button>
+    <button class="filter-btn" data-filter="audio">🎧 Audio</button>
+    <button class="filter-btn" data-filter="worksheet">📋 Worksheets</button>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="search" id="res-search" placeholder="Search resources…" />
+    </div>
+  </div>
+
+  <!-- Featured section -->
+  <div class="featured-section" id="featured-section">
+    <div class="section-label">⭐ Featured</div>
+    <div class="featured-grid" id="featured-grid">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <!-- All resources -->
+  <div class="section-label" id="all-label">All Resources</div>
+  <div class="resource-grid" id="resource-grid">
+    <!-- filled by JS -->
+  </div>
+</main>
+
+<script type="module" src="../js/resources.js"></script>
+</body>
+</html>

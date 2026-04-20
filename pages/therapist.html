@@ -1,301 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Book a session — MindCare</title>
-<style>
-:root {
---bg: #f4f6f9;
---surface: #ffffff;
---text: #1a2332;
---muted: #5c6b7f;
---accent: #3d7a8c;
---accent-soft: #e8f2f4;
---border: #d8e0ea;
---radius: 12px;
---shadow: 0 4px 24px rgba(26, 35, 50, 0.08);
-font-family: system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-}
-* { box-sizing: border-box; }
-body {
-margin: 0;
-min-height: 100vh;
-background: var(--bg);
-color: var(--text);
-line-height: 1.5;
-}
-.app {
-max-width: 560px;
-margin: 0 auto;
-padding: 1.5rem;
-}
-header {
-margin-bottom: 1.5rem;
-}
-header h1 {
-font-size: 1.35rem;
-font-weight: 600;
-margin: 0 0 0.25rem;
-}
-header p {
-margin: 0;
-color: var(--muted);
-font-size: 0.95rem;
-}
-.tabs {
-display: flex;
-gap: 0.5rem;
-margin-bottom: 1rem;
-border-bottom: 1px solid var(--border);
-padding-bottom: 0.5rem;
-}
-.tabs button {
-flex: 1;
-padding: 0.65rem 1rem;
-border: none;
-background: transparent;
-color: var(--muted);
-font-size: 0.95rem;
-font-weight: 500;
-cursor: pointer;
-border-radius: var(--radius) var(--radius) 0 0;
-transition: background 0.15s, color 0.15s;
-}
-.tabs button[aria-selected="true"] {
-background: var(--surface);
-color: var(--accent);
-box-shadow: var(--shadow);
-}
-.tabs button:focus-visible {
-outline: 2px solid var(--accent);
-outline-offset: 2px;
-}
-.panel {
-display: none;
-background: var(--surface);
-padding: 1.25rem;
-border-radius: var(--radius);
-box-shadow: var(--shadow);
-}
-.panel.active {
-display: block;
-}
-label {
-display: block;
-font-size: 0.85rem;
-font-weight: 600;
-margin-bottom: 0.35rem;
-color: var(--text);
-}
-select, input[type="date"], input[type="time"] {
-width: 100%;
-padding: 0.65rem 0.75rem;
-border: 1px solid var(--border);
-border-radius: 8px;
-font-size: 1rem;
-margin-bottom: 1rem;
-background: var(--surface);
-}
-select:focus, input:focus {
-outline: none;
-border-color: var(--accent);
-box-shadow: 0 0 0 3px var(--accent-soft);
-}
-.row {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 1rem;
-}
-@media (max-width: 480px) {
-.row { grid-template-columns: 1fr; }
-}
-.btn-primary {
-width: 100%;
-padding: 0.85rem 1rem;
-margin-top: 0.5rem;
-border: none;
-border-radius: 8px;
-background: var(--accent);
-color: #fff;
-font-size: 1rem;
-font-weight: 600;
-cursor: pointer;
-transition: filter 0.15s;
-}
-.btn-primary:hover {
-filter: brightness(1.05);
-}
-.btn-primary:focus-visible {
-outline: 2px solid var(--text);
-outline-offset: 2px;
-}
-.btn-primary:disabled {
-opacity: 0.55;
-cursor: not-allowed;
-}
-.message {
-margin-top: 1rem;
-padding: 0.75rem 1rem;
-border-radius: 8px;
-font-size: 0.9rem;
-display: none;
-}
-.message.show {
-display: block;
-}
-.message.success {
-background: var(--accent-soft);
-color: var(--accent);
-}
-.session-list {
-list-style: none;
-margin: 0;
-padding: 0;
-}
-.session-list li {
-padding: 1rem;
-border: 1px solid var(--border);
-border-radius: 8px;
-margin-bottom: 0.75rem;
-}
-.session-list li:last-child {
-margin-bottom: 0;
-}
-.session-list strong {
-display: block;
-font-size: 1rem;
-}
-.session-list span {
-font-size: 0.9rem;
-color: var(--muted);
-}
-.empty {
-color: var(--muted);
-text-align: center;
-padding: 2rem 1rem;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="/images/herb.svg" />
+  <title>Therapists — MindBloom</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #F2EFE8; --surface: #fff; --sidebar: #2D5A3D;
+      --primary: #3D6B35; --accent: #5a9e50;
+      --border:  rgba(0,0,0,0.08); --text: #2A2724; --muted: #7A7870;
+      --radius: 12px; --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 0.5px rgba(0,0,0,0.05);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; font-size: 14px; }
+
+    /* Sidebar */
+    .sidebar { width: 230px; min-height: 100vh; background: var(--sidebar); display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sb-logo { display: flex; align-items: center; gap: 10px; padding: 20px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); text-decoration: none; }
+    .sb-mark { width: 34px; height: 34px; background: rgba(255,255,255,0.14); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sb-name { font-size: 16px; font-weight: 700; color: #fff; }
+    .sb-sub  { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.09em; margin-top: 2px; }
+    .sb-nav  { flex: 1; padding: 10px; }
+    .sb-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.1em; padding: 12px 8px 5px; }
+    .nav-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 8px; color: rgba(255,255,255,0.62); font-size: 13px; font-weight: 500; margin-bottom: 2px; transition: background 0.12s, color 0.12s; text-decoration: none; }
+    .nav-item:hover  { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.9); }
+    .nav-item.active { background: rgba(255,255,255,0.15); color: #fff; }
+    .nav-item svg    { width: 15px; height: 15px; flex-shrink: 0; }
+    .sb-user { padding: 14px 18px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .sb-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .sb-uname  { font-size: 12px; font-weight: 700; color: #fff; }
+    .sb-uemail { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+
+    /* Main */
+    .main { flex: 1; padding: 28px 36px 48px; min-width: 0; max-width: 920px; }
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+    h1 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 500; }
+    .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .btn-logout { padding: 7px 14px; background: rgba(0,0,0,0.06); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; transition: background 0.12s; flex-shrink: 0; }
+    .btn-logout:hover { background: rgba(0,0,0,0.10); }
+
+    /* Content */
+    .disclaimer { background: #fff8e1; border-left: 4px solid #f39c12; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #7d5e00; margin-bottom: 22px; line-height: 1.5; }
+    .tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 22px; }
+    .tab-btn { padding: 9px 18px; border: none; background: none; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 8px 8px 0 0; transition: background 0.12s, color 0.12s; font-family: inherit; }
+    .tab-btn:hover { background: rgba(0,0,0,0.04); color: var(--text); }
+    .tab-btn[aria-selected="true"] { background: var(--surface); color: var(--primary); box-shadow: 0 -1px 4px rgba(0,0,0,0.06); border-bottom: 2px solid var(--surface); margin-bottom: -2px; }
+    .panel { display: none; }
+    .panel[aria-selected="true"] { display: block; }
+    .therapist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    .therapist-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; display: flex; flex-direction: column; gap: 10px; transition: box-shadow 0.15s; }
+    .therapist-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.11); }
+    .t-header { display: flex; gap: 12px; align-items: flex-start; }
+    .t-avatar { width: 44px; height: 44px; border-radius: 50%; background: #d5e8d0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--primary); flex-shrink: 0; }
+    .t-name   { font-size: 15px; font-weight: 700; }
+    .t-creds  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .t-rating { font-size: 12px; color: #e67e22; margin-top: 2px; }
+    .t-specs  { font-size: 12px; color: var(--primary); font-weight: 600; }
+    .t-bio    { font-size: 13px; color: #555; line-height: 1.5; }
+    .t-footer { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
+    .t-rate   { font-weight: 700; color: var(--text); }
+    .btn-book-this { width: 100%; padding: 10px; border: none; border-radius: 8px; background: var(--primary); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: filter 0.15s; }
+    .btn-book-this:hover { filter: brightness(1.08); }
+    .card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px 28px; }
+    .selected-therapist-note { background: #f0f7ee; border-left: 4px solid var(--primary); border-radius: 8px; padding: 12px 16px; font-size: 13px; margin-bottom: 20px; }
+    .selected-therapist-note strong { color: var(--primary); }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 6px; }
+    .field input, .field select, .field textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.15s; background: #fff; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--primary); }
+    .field textarea { resize: vertical; min-height: 72px; }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .btn-submit { width: 100%; padding: 13px; margin-top: 4px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: filter 0.15s, opacity 0.15s; }
+    .btn-submit:hover:not(:disabled) { filter: brightness(1.08); }
+    .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+    #bookingStatus { margin-top: 10px; font-size: 13px; font-weight: 600; min-height: 20px; }
+    .appt-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px; margin-bottom: 14px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .appt-name  { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .appt-when  { font-size: 13px; color: var(--muted); }
+    .appt-notes { font-size: 13px; color: #555; margin-top: 6px; }
+    .btn-cancel { flex-shrink: 0; padding: 7px 14px; border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; font-family: inherit; transition: border-color 0.12s, color 0.12s; }
+    .btn-cancel:hover { border-color: #c0392b; color: #c0392b; }
+    .loading-text { font-size: 13px; color: var(--muted); }
+  </style>
 </head>
 <body>
 
-<div class="app">
-<header>
-<h1>Book a therapy session</h1>
-<p>Choose a therapist and time that works for you.</p>
-</header>
+<nav class="sidebar">
+  <a class="sb-logo" href="/home">
+    <div class="sb-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" width="18"><path d="M12 22V12M12 12C12 7 7 4 3 6M12 12C12 7 17 4 21 6"/></svg></div>
+    <div><div class="sb-name">MindBloom</div><div class="sb-sub">Therapal</div></div>
+  </a>
+  <div class="sb-nav">
+    <div class="sb-label">Main</div>
+    <a class="nav-item" href="/home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+    <a class="nav-item" href="/mood-tracker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>Mood Tracker</a>
+    <a class="nav-item" href="/self-reflection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Journal</a>
+    <a class="nav-item active" href="/therapist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Therapists</a>
+    <div class="sb-label" style="margin-top:6px;">More</div>
+    <a class="nav-item" href="/resources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Resources</a>
+    <a class="nav-item" href="/profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile Settings</a>
+  </div>
+  <div class="sb-user">
+    <div class="sb-avatar" id="avatar-initials">?</div>
+    <div><div class="sb-uname" id="sb-username">Loading…</div><div class="sb-uemail" id="sb-useremail"></div></div>
+  </div>
+</nav>
 
-<div class="tabs" role="tablist" aria-label="Booking sections">
-<button type="button" role="tab" id="tab-book" aria-selected="true" aria-controls="panel-book">Book</button>
-<button type="button" role="tab" id="tab-upcoming" aria-selected="false" aria-controls="panel-upcoming">Upcoming sessions</button>
-</div>
+<main class="main">
+  <div class="page-header">
+    <div>
+      <h1>Therapists</h1>
+      <p class="page-sub">Browse licensed therapists and book a session that works for you.</p>
+    </div>
+    <button class="btn-logout" id="logoutBtn">Sign out</button>
+  </div>
 
-<section class="panel active" id="panel-book" role="tabpanel" aria-labelledby="tab-book">
-<form id="booking-form" novalidate>
-<label for="therapist">Therapist</label>
-<select id="therapist" name="therapist" required>
-<option value="">Select a therapist</option>
-<option value="Dr. Sarah Chen">Dr. Sarah Chen — CBT</option>
-<option value="James Okonkwo, LCSW">James Okonkwo, LCSW — Trauma-informed</option>
-<option value="Dr. Maria Santos">Dr. Maria Santos — Family therapy</option>
-<option value="Alex Rivera, LMFT">Alex Rivera, LMFT — Couples</option>
-</select>
+  <div class="disclaimer">
+    ⚠️ <strong>Note:</strong> MindBloom is a college project and is not a licensed clinical service.
+    No real therapists or real appointments are involved. This interface is for demonstration purposes only.
+  </div>
 
-<div class="row">
-<div>
-<label for="date">Day</label>
-<input type="date" id="date" name="date" required />
-</div>
-<div>
-<label for="time">Time</label>
-<input type="time" id="time" name="time" required />
-</div>
-</div>
+  <div class="tabs" role="tablist">
+    <button class="tab-btn" id="tab-browse"   role="tab" aria-selected="true"  aria-controls="panel-browse">Browse Therapists</button>
+    <button class="tab-btn" id="tab-book"     role="tab" aria-selected="false" aria-controls="panel-book">Book a Session</button>
+    <button class="tab-btn" id="tab-upcoming" role="tab" aria-selected="false" aria-controls="panel-upcoming">Upcoming Sessions</button>
+  </div>
 
-<button type="submit" class="btn-primary" id="confirm-btn">Confirm appointment</button>
-<div class="message success" id="feedback"></div>
-</form>
-</section>
+  <div id="panel-browse" role="tabpanel">
+    <div class="therapist-grid" id="therapistGrid">
+      <p class="loading-text">Loading therapists…</p>
+    </div>
+  </div>
 
-<section class="panel" id="panel-upcoming" role="tabpanel" aria-labelledby="tab-upcoming" hidden>
-<ul class="session-list" id="session-list"></ul>
-<p class="empty" id="empty-state">No upcoming sessions yet. Book one in the Book tab.</p>
-</section>
+  <div id="panel-book" role="tabpanel" hidden>
+    <div class="card">
+      <div class="selected-therapist-note">
+        📅 Booking with: <strong id="selectedTherapistName">None selected — browse the therapists tab first.</strong>
+      </div>
+      <input type="hidden" id="selectedTherapist" />
+      <form id="bookingForm" novalidate>
+        <div class="row-2">
+          <div class="field"><label>Date</label><input type="date" id="apptDate" required /></div>
+          <div class="field"><label>Time</label><input type="time" id="apptTime" required /></div>
+        </div>
+        <div class="field">
+          <label>Session Format</label>
+          <select id="apptFormat">
+            <option value="video">📹 Video</option>
+            <option value="phone">📞 Phone</option>
+            <option value="in_person">🏢 In-Person</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Pre-session Notes (optional)</label>
+          <textarea id="apptNotes" placeholder="Anything you'd like your therapist to know before the session…"></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Confirm Appointment</button>
+      </form>
+      <p id="bookingStatus"></p>
+    </div>
+  </div>
 
-</div>
+  <div id="panel-upcoming" role="tabpanel" hidden>
+    <div id="upcomingList"><p class="loading-text">Loading…</p></div>
+  </div>
+</main>
 
-<script>
-(function () {
-var tabBook = document.getElementById("tab-book");
-var tabUpcoming = document.getElementById("tab-upcoming");
-var panelBook = document.getElementById("panel-book");
-var panelUpcoming = document.getElementById("panel-upcoming");
-var form = document.getElementById("booking-form");
-var feedback = document.getElementById("feedback");
-var sessionList = document.getElementById("session-list");
-var emptyState = document.getElementById("empty-state");
-
-function setTab(active) {
-var isBook = active === "book";
-tabBook.setAttribute("aria-selected", isBook);
-tabUpcoming.setAttribute("aria-selected", !isBook);
-panelBook.classList.toggle("active", isBook);
-panelUpcoming.classList.toggle("active", !isBook);
-panelBook.hidden = !isBook;
-panelUpcoming.hidden = isBook;
-}
-
-tabBook.addEventListener("click", function () { setTab("book"); });
-tabUpcoming.addEventListener("click", function () { setTab("upcoming"); });
-
-function formatWhen(dateStr, timeStr) {
-var d = new Date(dateStr + "T" + timeStr);
-if (isNaN(d.getTime())) return dateStr + " at " + timeStr;
-return d.toLocaleString(undefined, {
-weekday: "long",
-year: "numeric",
-month: "long",
-day: "numeric",
-hour: "numeric",
-minute: "2-digit"
-});
-}
-
-function refreshEmpty() {
-emptyState.hidden = sessionList.children.length > 0;
-}
-
-form.addEventListener("submit", function (e) {
-e.preventDefault();
-
-var therapist = document.getElementById("therapist").value;
-var date = document.getElementById("date").value;
-var time = document.getElementById("time").value;
-
-if (!therapist || !date || !time) {
-feedback.textContent = "Please choose a therapist, day, and time.";
-feedback.classList.add("show");
-return;
-}
-
-var li = document.createElement("li");
-li.innerHTML =
-"<strong>" + therapist.replace(/</g, "&lt;") + "</strong>" +
-"<span>" + formatWhen(date, time) + "</span>";
-
-sessionList.appendChild(li);
-refreshEmpty();
-
-feedback.textContent = "Your appointment is confirmed. You can view it under Upcoming sessions.";
-feedback.classList.add("show");
-
-form.reset();
-setTab("upcoming");
-});
-
-refreshEmpty();
-})();
-</script>
-
+<script type="module" src="../js/therapist-page.js"></script>
 </body>
 </html>
