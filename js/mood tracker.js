@@ -24,7 +24,7 @@ button.addEventListener("click", async () => {
     }
 });
 
-// ✅ FETCH previous moods
+// FETCH previous moods
 async function loadMoods() {
     const { data, error } = await supabase
         .from("moods") // <-- same table
