@@ -2,7 +2,7 @@
 // Controller for /pages/staff/staff-dashboard
 // Staff-only dashboard for MindBloom
 
-import { supabase, requireAuth } from './supabase.js';
+import { supabase, requireAuth } from '../supabase.js';
 
 const PROFILE_TABLE = 'profile'; // change to 'profiles' if your real table is plural
 const ALLOWED_ROLES = ['staff', 'admin', 'therapist'];
