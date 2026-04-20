@@ -132,7 +132,7 @@ async function loadSidebarProfile() {
   try {
     const profile = await query(
       supabase
-        .from('profile')
+        .from('profiles')
         .select('full_name, email')
         .eq('id', user.id)
         .maybeSingle()
