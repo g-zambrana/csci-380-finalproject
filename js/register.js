@@ -1,59 +1,133 @@
 // js/register.js
 import { supabase } from './supabase.js';
 
-const form          = document.getElementById('registerForm');
-const emailInput    = document.getElementById('email');
+const form = document.getElementById('registerForm');
+const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const fullNameInput = document.getElementById('fullName');
-const message       = document.getElementById('message');
+const message = document.getElementById('message');
 
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
+if (!form || !emailInput || !passwordInput || !message) {
+  console.error('Register page is missing required form elements.');
+} else {
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-  const email    = emailInput.value.trim();
-  const password = passwordInput.value;
-  const fullName = fullNameInput?.value.trim() || email.split('@')[0];
+    const submitButton = form.querySelector('button[type="submit"]');
 
-  if (password.length < 6) {
-    message.textContent = 'Password must be at least 6 characters.';
-    message.style.color = '#c0392b';
-    return;
-  }
+    const setMessage = (text, type = 'info') => {
+      message.textContent = text;
 
-  message.textContent = 'Creating account…';
-  message.style.color = '';
+      if (type === 'error') {
+        message.style.color = '#c0392b';
+      } else if (type === 'success') {
+        message.style.color = '#3D6B35';
+      } else {
+        message.style.color = '';
+      }
+    };
 
-  // 1. Sign up in Supabase Auth
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: { data: { full_name: fullName, role: 'client' } },
+    const email = emailInput.value.trim().toLowerCase();
+    const password = passwordInput.value;
+    const fullName = fullNameInput?.value.trim() || email.split('@')[0];
+
+    if (!email) {
+      setMessage('Please enter your email.', 'error');
+      return;
+    }
+
+    if (!password) {
+      setMessage('Please enter your password.', 'error');
+      return;
+    }
+
+    if (password.length < 6) {
+      setMessage('Password must be at least 6 characters.', 'error');
+      return;
+    }
+
+    try {
+      if (submitButton) submitButton.disabled = true;
+      setMessage('Creating account...');
+
+      // After email confirmation, send user back to login page.
+      // Make sure this URL is also added in Supabase Auth redirect settings.
+      const emailRedirectTo = `${window.location.origin}/login`;
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo,
+          data: {
+            full_name: fullName,
+            role: 'client',
+          },
+        },
+      });
+
+      if (error) {
+        setMessage(error.message, 'error');
+        return;
+      }
+
+      // On hosted Supabase projects with email confirmation enabled,
+      // signUp usually returns a user but no active session until they verify email.
+      const user = data?.user;
+
+      if (user?.id) {
+        // Best-effort profile row
+        const { error: profileError } = await supabase.from('users').upsert(
+          {
+            id: user.id,
+            email,
+            full_name: fullName,
+            role: 'client',
+          },
+          { onConflict: 'id' }
+        );
+
+        if (profileError) {
+          console.warn('Profile upsert warning:', profileError.message);
+        }
+
+        // Best-effort streak seed row
+        const { error: streakError } = await supabase.from('user_streaks').upsert(
+          { user_id: user.id },
+          { onConflict: 'user_id' }
+        );
+
+        if (streakError) {
+          console.warn('Streak upsert warning:', streakError.message);
+        }
+      }
+
+      // If email confirmations are on, user exists but session is usually null until confirmation.
+      if (!data?.session) {
+        setMessage(
+          '✓ Account created! Check your email to confirm your account, then log in.',
+          'success'
+        );
+        form.reset();
+
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 2500);
+
+        return;
+      }
+
+      // If email confirmations are off, user may already have a session.
+      setMessage('✓ Account created successfully! Redirecting...', 'success');
+
+      setTimeout(() => {
+        window.location.href = '/home';
+      }, 1500);
+    } catch (err) {
+      console.error(err);
+      setMessage('Something went wrong. Please try again.', 'error');
+    } finally {
+      if (submitButton) submitButton.disabled = false;
+    }
   });
-
-  if (error) {
-    message.textContent = error.message;
-    message.style.color = '#c0392b';
-    return;
-  }
-
-  // 2. Insert public profile row (best-effort — also handled by dashboard on first load)
-  if (data.user) {
-    await supabase.from('users').upsert({
-      id:        data.user.id,
-      email,
-      full_name: fullName,
-      role:      'client',
-    }, { onConflict: 'id' });
-
-    // Seed streak row so the dashboard stat never shows null
-    await supabase.from('user_streaks').upsert(
-      { user_id: data.user.id },
-      { onConflict: 'user_id' }
-    );
-  }
-
-  message.textContent = '✓ Account created! Check your email to confirm, then log in.';
-  message.style.color = '#3D6B35';
-
-  setTimeout(() => { window.location.href = '/login'; }, 2500);
-});
+}
