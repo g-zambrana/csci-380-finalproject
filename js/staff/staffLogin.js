@@ -7,7 +7,7 @@ const passwordInput = document.getElementById('staffPassword');
 const message = document.getElementById('message');
 
 const ALLOWED_ROLES = ['staff', 'admin', 'therapist'];
-const STAFF_DASHBOARD_PATH = '/pages/staff/staff-dashboard';
+const STAFF_DASHBOARD_PATH = '/staff/staff-dashboard';
 
 function setMessage(text, color = '') {
   message.textContent = text;
