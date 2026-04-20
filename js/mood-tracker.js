@@ -1,5 +1,5 @@
 
-import { supabase } from "../supabase/supabase.js";
+import { supabase } from './supabase.js';
 
 // -----------------------------
 // Sidebar / auth bootstrap
