@@ -6,6 +6,11 @@
       "source": "/",
       "destination": "/login",
       "permanent": false
+    },
+    {
+      "source": "/staff",
+      "destination": "/staff/login",
+      "permanent": false
     }
   ],
   "rewrites": [
@@ -19,6 +24,7 @@
     { "source": "/previousentries", "destination": "/pages/previousentries" },
     { "source": "/therapist",       "destination": "/pages/therapist"       },
     { "source": "/resources",       "destination": "/pages/resources"       },
-    { "source": "/profile",         "destination": "/pages/profile"         }
+    { "source": "/profile",         "destination": "/pages/profile"         },
+    { "source": "/staff/login",      "destination": "/pages/staff/login"    }
   ]
 }
