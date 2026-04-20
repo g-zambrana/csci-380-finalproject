@@ -1,78 +1,247 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap');
+
+:root {
+    --bg: #F2EFE8;
+    --surface: #FFFFFF;
+    --primary: #3D6B35;
+    --primary-soft: #6BAF61;
+    --text: #2A2724;
+    --muted: #7A7870;
+    --border: rgba(0, 0, 0, 0.08);
+    --shadow: 0 1px 4px rgba(0, 0, 0, 0.07), 0 0 0 0.5px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.10);
+    --radius: 12px;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 body {
+    min-height: 100vh;
+    background: linear-gradient(to right, #FFF8F0, #ddf2e18d);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+}
+
+/* Layout */
+.auth-shell {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(to right, #FFF8F0, #ddf2e18d);
-    color: #333;
+    padding: 28px 16px;
 }
 
-.container {
-    margin: 0 15px;
+.auth-panel {
+    width: 100%;
+    max-width: 500px;
 }
 
+/* Brand area */
+.brand-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.brand-mark {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: rgba(61, 107, 53, 0.12);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.brand-copy {
+    min-width: 0;
+}
+
+#logoh1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--primary);
+    letter-spacing: -1px;
+    margin: 0;
+}
+
+.brand-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.5;
+}
+
+/* Card */
 .form-box {
     width: 100%;
-    max-width: 450px;
-    padding: 40px 30px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 34px 30px;
+}
+
+.auth-header {
+    text-align: center;
 }
 
 h2 {
-    font-size: 34px;
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 2px;
+}
+
+.auth-subtext {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+#registerP {
     text-align: center;
+    font-size: 13px;
+    color: var(--muted);
     margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+#registerP a,
+#forgotP a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+#registerP a:hover,
+#forgotP a:hover {
+    text-decoration: underline;
+}
+
+/* Fields */
+.field-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 input {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    background: #eee;
-    border: none;
-    border-radius: 6px;
+    padding: 13px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
     outline: none;
-    font-size: 16px;
-    color: #333;
+    background: #fff;
+    color: var(--text);
+    font-size: 15px;
+    font-family: 'Nunito', sans-serif;
+    transition: border-color 0.15s, box-shadow 0.15s;
 }
 
+input::placeholder {
+    color: #9a978f;
+}
+
+input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(61, 107, 53, 0.08);
+}
+
+/* Button */
 .submitButton {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    background: #7A9E7E;
+    padding: 13px;
+    margin-top: 6px;
     border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
+    border-radius: 10px;
+    background: var(--primary);
     color: #fff;
-    transition: 0.5s;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: filter 0.15s, transform 0.12s, box-shadow 0.15s;
+    box-shadow: var(--shadow);
 }
 
-#registerP {
-    margin-top: -10px;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    text-align: center;
-    font-size: 14px;
-    color: #555;
+.submitButton:hover {
+    filter: brightness(1.05);
+    box-shadow: var(--shadow-hover);
 }
 
-#logoh1 {
-    margin-top: -80px;
-    margin-bottom: 20px;
-    font-size: 58px;
+.submitButton:active {
+    transform: translateY(1px);
+}
+
+/* Extra links/messages */
+#forgotP {
     text-align: center;
-    color: #7A9E7E;
-    letter-spacing: -2px;
+    font-size: 13px;
+    margin-top: 16px;
+    color: var(--muted);
+}
+
+#message {
+    min-height: 20px;
+    margin-top: 14px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+/* Optional generic helpers */
+p {
+    color: var(--muted);
+}
+
+a {
+    color: inherit;
+}
+
+/* Responsive */
+@media (max-width: 560px) {
+    .auth-shell {
+        padding: 18px 12px;
+    }
+
+    .form-box {
+        padding: 26px 20px;
+    }
+
+    .brand-top {
+        align-items: flex-start;
+    }
+
+    #logoh1 {
+        font-size: 34px;
+    }
+
+    h2 {
+        font-size: 26px;
+    }
+
+    .brand-sub,
+    .auth-subtext,
+    #registerP,
+    #forgotP,
+    #message {
+        font-size: 12px;
+    }
 }
