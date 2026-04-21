@@ -276,7 +276,7 @@ export async function getAppointmentHistory(userId, limit = 20) {
         updated_at,
         therapists!therapist_id (
           id,
-          profiles!user_id (
+          profiles!profile_id (
             full_name,
             display_name
           )
