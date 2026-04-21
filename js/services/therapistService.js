@@ -197,7 +197,8 @@ export async function getUpcomingAppointments(userId) {
 
 /**
  * Get the very next upcoming appointment.
- */export async function bookAppointment({
+ */bookAppointment()
+export async function bookAppointment({
   userId,
   therapistId,
   scheduledAt,
@@ -245,69 +246,5 @@ export async function getUpcomingAppointments(userId) {
         updated_at
       `)
       .single()
-  );
-}
-
-/**
- * Cancel an existing appointment.
- */
-export async function cancelAppointment(
-  appointmentId,
-  cancelledByUserId,
-  reason = ''
-) {
-  return query(
-    supabase
-      .from('appointments')
-      .update({
-        status: 'cancelled',
-        cancelled_by: cancelledByUserId,
-        cancelled_at: new Date().toISOString(),
-        cancel_reason: reason || null,
-      })
-      .eq('id', appointmentId)
-      .select(`
-        id,
-        status,
-        cancelled_by,
-        cancelled_at,
-        cancel_reason
-      `)
-      .single()
-  );
-}
-
-/**
- * Get appointment history for the user.
- */
-export async function getAppointmentHistory(userId, limit = 20) {
-  return query(
-    supabase
-      .from('appointments')
-      .select(`
-        id,
-        user_id,
-        therapist_id,
-        scheduled_at,
-        duration_mins,
-        format,
-        status,
-        notes_client,
-        cancel_reason,
-        cancelled_at,
-        created_at,
-        updated_at,
-        therapists!therapist_id (
-          id,
-          profiles!profile_id (
-            full_name,
-            display_name
-          )
-        )
-      `)
-      .eq('user_id', userId)
-      .in('status', ['completed', 'cancelled', 'no_show'])
-      .order('scheduled_at', { ascending: false })
-      .limit(limit)
   );
 }
