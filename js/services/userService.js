@@ -35,7 +35,7 @@ async function safeQuery(promise) {
 export async function getUserProfile(userId) {
   const row = await safeQuery(
     supabase
-      .from('users')
+      .from('profiles')
       .select('*, client_profiles(*)')
       .eq('id', userId)
       .maybeSingle()
@@ -72,7 +72,7 @@ export async function getUserProfile(userId) {
 export async function upsertUserProfile(userId, email, updates = {}) {
   const row = await safeQuery(
     supabase
-      .from('users')
+      .from('profiles')
       .upsert({ id: userId, email, ...updates }, { onConflict: 'id' })
       .select()
       .single()
@@ -92,7 +92,7 @@ export async function upsertUserProfile(userId, email, updates = {}) {
 export async function updateUserProfile(userId, updates) {
   const row = await safeQuery(
     supabase
-      .from('users')
+      .from('profiles')
       .update(updates)
       .eq('id', userId)
       .select()
