@@ -197,32 +197,55 @@ export async function getUpcomingAppointments(userId) {
 
 /**
  * Get the very next upcoming appointment.
- */
-export async function getNextAppointment(userId) {
-  const rows = await query(
+ */export async function bookAppointment({
+  userId,
+  therapistId,
+  scheduledAt,
+  durationMins = 50,
+  format = 'video',
+  notesClient,
+}) {
+  // 1) Check if therapist is already booked at that exact time
+  const existing = await query(
     supabase
       .from('appointments')
+      .select('id')
+      .eq('therapist_id', therapistId)
+      .eq('scheduled_at', scheduledAt)
+      .eq('status', 'scheduled')
+  );
+
+  if (existing.length > 0) {
+    throw new Error('That time slot is already booked. Please choose another time.');
+  }
+
+  // 2) If free, create appointment
+  return query(
+    supabase
+      .from('appointments')
+      .insert({
+        user_id: userId,
+        therapist_id: therapistId,
+        scheduled_at: scheduledAt,
+        duration_mins: durationMins,
+        format,
+        status: 'scheduled',
+        notes_client: notesClient ?? null,
+      })
       .select(`
         id,
+        user_id,
+        therapist_id,
         scheduled_at,
         duration_mins,
         format,
-        therapists!therapist_id (
-          id,
-          profiles!user_id (
-            full_name,
-            display_name
-          )
-        )
+        status,
+        notes_client,
+        created_at,
+        updated_at
       `)
-      .eq('user_id', userId)
-      .eq('status', 'scheduled')
-      .gte('scheduled_at', new Date().toISOString())
-      .order('scheduled_at', { ascending: true })
-      .limit(1)
+      .single()
   );
-
-  return rows?.[0] ?? null;
 }
 
 /**
