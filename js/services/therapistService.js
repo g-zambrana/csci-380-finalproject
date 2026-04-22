@@ -128,7 +128,11 @@ export async function bookAppointment({
   durationMins = 50,
   format = 'video',
   notesClient,
-}) {
+} = {}) {
+  if (!userId || !therapistId || !scheduledAt) {
+    throw new Error('bookAppointment requires userId, therapistId, and scheduledAt.');
+  }
+
   return query(
     supabase
       .from('appointments')
@@ -197,7 +201,7 @@ export async function getUpcomingAppointments(userId) {
 
 /**
  * Get the very next upcoming appointment.
- */bookAppointment()
+ */
 export async function getNextAppointment(userId) {
   const rows = await query(
     supabase
@@ -276,7 +280,7 @@ export async function getAppointmentHistory(userId, limit = 20) {
         updated_at,
         therapists!therapist_id (
           id,
-          profiles!profile_id (
+          profiles!user_id (
             full_name,
             display_name
           )
