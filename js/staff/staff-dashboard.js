@@ -1,6 +1,5 @@
 // /js/staff/staff-dashboard.js
 // MindBloom staff dashboard controller
-// Safer version aligned to your live database structure
 
 import { supabase, requireAuth } from '../supabase.js';
 
@@ -80,6 +79,23 @@ function escapeHtml(value = '') {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
+}
+
+function normalizeValue(value) {
+  return String(value || '').trim().toLowerCase();
+}
+
+function isUserRole(role) {
+  return normalizeValue(role) === 'user';
+}
+
+function isDashboardUserRole(role) {
+  const normalized = normalizeValue(role);
+  return normalized === 'user' || normalized === 'client';
+}
+
+function isScheduledStatus(status) {
+  return normalizeValue(status) === 'scheduled';
 }
 
 function getInitials(name = '') {
@@ -180,20 +196,8 @@ function isThisWeek(value) {
   return date >= startOfWeek && date < endOfWeek;
 }
 
-function isSameMonth(value) {
-  if (!value) return false;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return false;
-
-  const now = new Date();
-  return (
-    date.getFullYear() === now.getFullYear() &&
-    date.getMonth() === now.getMonth()
-  );
-}
-
 function getAppointmentStatusBadge(status) {
-  const normalized = String(status || '').toLowerCase();
+  const normalized = normalizeValue(status);
 
   if (normalized === 'scheduled' || normalized === 'completed') {
     return 'badge-success';
@@ -272,7 +276,7 @@ function getOpenAlertsData(clientProfiles, appointments, moodEntries) {
       const hasUpcomingAppointment = appointments.some(appt => {
         return (
           appt.user_id === profile.id &&
-          appt.status === 'scheduled' &&
+          isScheduledStatus(appt.status) &&
           appt.scheduled_at &&
           new Date(appt.scheduled_at) >= now
         );
@@ -317,7 +321,7 @@ async function requireStaffUser() {
     throw new Error('Your staff profile was not found in profiles.');
   }
 
-  if (!ALLOWED_ROLES.includes(profile.role)) {
+  if (!ALLOWED_ROLES.includes(normalizeValue(profile.role))) {
     await supabase.auth.signOut();
     window.location.replace(STAFF_LOGIN_PATH);
     throw new Error('Unauthorized staff access.');
@@ -504,7 +508,8 @@ function buildTherapistNameMap(therapists, profileMap) {
 
 function renderStats(profiles, therapists, appointments, moodEntries) {
   const newUsersThisMonth = profiles.filter(profile => {
-    return profile.role === 'user' && isThisMonth(profile.created_at);
+    if (!profile.created_at) return false;
+    return isUserRole(profile.role) && isThisMonth(profile.created_at);
   });
 
   const now = new Date();
@@ -516,8 +521,8 @@ function renderStats(profiles, therapists, appointments, moodEntries) {
 
     return (
       scheduledDate >= now &&
-      isSameMonth(appt.scheduled_at) &&
-      appt.status === 'scheduled'
+      isThisMonth(appt.scheduled_at) &&
+      isScheduledStatus(appt.status)
     );
   });
 
@@ -526,7 +531,7 @@ function renderStats(profiles, therapists, appointments, moodEntries) {
       .filter(appt => {
         return (
           appt.therapist_id &&
-          appt.status === 'scheduled' &&
+          isScheduledStatus(appt.status) &&
           isThisWeek(appt.scheduled_at)
         );
       })
@@ -547,7 +552,7 @@ function renderStats(profiles, therapists, appointments, moodEntries) {
     els.totalUsers.textContent = String(newUsersThisMonth.length);
   }
   if (els.totalUsersSub) {
-    els.totalUsersSub.textContent = 'New user accounts this month';
+    els.totalUsersSub.textContent = 'User accounts created this month';
   }
 
   if (els.upcomingAppts) {
@@ -570,6 +575,19 @@ function renderStats(profiles, therapists, appointments, moodEntries) {
   if (els.openAlertsSub) {
     els.openAlertsSub.textContent = 'Unique mood entries created today';
   }
+
+  console.log('[staff-dashboard] total-clients debug', {
+    profilesCount: profiles.length,
+    userProfiles: profiles.filter(profile => isUserRole(profile.role)).length,
+    newUsersThisMonth: newUsersThisMonth.length,
+    userRows: profiles
+      .filter(profile => isUserRole(profile.role))
+      .map(profile => ({
+        id: profile.id,
+        role: profile.role,
+        created_at: profile.created_at,
+      })),
+  });
 }
 
 function renderUsersTable(profiles) {
@@ -578,9 +596,7 @@ function renderUsersTable(profiles) {
   const query = (els.userSearch?.value || '').trim().toLowerCase();
   const filter = els.userFilter?.value || 'all';
 
-  const clientProfiles = profiles.filter(profile => {
-    return profile.role === 'client' || profile.role === 'user';
-  });
+  const clientProfiles = profiles.filter(profile => isDashboardUserRole(profile.role));
 
   const filtered = clientProfiles.filter(profile => {
     const name = (profile.full_name || '').toLowerCase();
@@ -635,7 +651,7 @@ function renderAppointmentsTable(appointments, profileMap, therapistNameMap) {
 
   const upcoming = appointments
     .filter(appt => appt.scheduled_at && new Date(appt.scheduled_at) >= now)
-    .filter(appt => appt.status === 'scheduled')
+    .filter(appt => isScheduledStatus(appt.status))
     .sort((a, b) => new Date(a.scheduled_at) - new Date(b.scheduled_at))
     .slice(0, 8);
 
@@ -738,7 +754,7 @@ function renderQuickNoteUsers(profiles) {
   if (!els.noteUser) return;
 
   const clients = profiles
-    .filter(profile => profile.role === 'client' || profile.role === 'user')
+    .filter(profile => isDashboardUserRole(profile.role))
     .sort((a, b) => {
       const aName = a.full_name || '';
       const bName = b.full_name || '';
@@ -866,10 +882,7 @@ function attachEvents() {
         state.staffNotes = await fetchStaffNotes();
         renderRecentNotes(state.staffNotes, buildProfileMap(state.profiles));
 
-        const dashboardUsers = state.profiles.filter(profile => {
-          return profile.role === 'client' || profile.role === 'user';
-        });
-
+        const dashboardUsers = state.profiles.filter(profile => isDashboardUserRole(profile.role));
         renderMiniStats(dashboardUsers, state.moodEntries, state.staffNotes);
 
         showStatus('Note saved successfully.', 'success');
@@ -919,11 +932,8 @@ async function init() {
     state.staffLogs = staffLogs;
     state.moodEntries = moodEntries;
 
-    const dashboardUsers = profiles.filter(profile => {
-      return profile.role === 'client' || profile.role === 'user';
-    });
-
-    const alertUsers = profiles.filter(profile => profile.role === 'client' || profile.role === 'user');
+    const dashboardUsers = profiles.filter(profile => isDashboardUserRole(profile.role));
+    const alertUsers = profiles.filter(profile => isDashboardUserRole(profile.role));
     const profileMap = buildProfileMap(profiles);
     const therapistNameMap = buildTherapistNameMap(therapists, profileMap);
     const alerts = getOpenAlertsData(alertUsers, appointments, moodEntries);
