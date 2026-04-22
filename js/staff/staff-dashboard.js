@@ -332,26 +332,21 @@ function renderStaffIdentity(profile, authUser) {
 
 async function fetchProfiles() {
   const { data, error } = await supabase
-    .from(PROFILES_TABLE)
-    .select(`
-      id,
-      full_name,
-      email,
-      role,
-      energy_level,
-      anxiety_level,
-      sleep_hours,
-      created_at
-    `)
-    .order('created_at', { ascending: false });
+    .from('profiles')
+    .select('id, full_name, email, role')
+    .order('id', { ascending: false });
 
   if (error) throw error;
 
   return (data || []).map(profile => ({
     ...profile,
+    energy_level: null,
+    anxiety_level: null,
+    sleep_hours: null,
+    created_at: null,
     display_name: profile.full_name ?? null,
     avatar_url: null,
-    updated_at: profile.created_at ?? null,
+    updated_at: null,
     logged_at: null,
   }));
 }
