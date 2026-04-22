@@ -1,3 +1,4 @@
+// js/mood-tracker.js
 import { supabase } from "./supabase.js";
 
 // -----------------------------
@@ -24,9 +25,7 @@ async function initSidebar() {
       .eq("id", user.id)
       .maybeSingle();
 
-    if (profileError) {
-      throw profileError;
-    }
+    if (profileError) throw profileError;
 
     const fullName = profile?.full_name || user.email?.split("@")[0] || "User";
     const email = profile?.email || user.email || "";
@@ -101,7 +100,7 @@ function formatEntryDate(entry) {
   const date = new Date(raw);
 
   if (Number.isNaN(date.getTime())) {
-    return "Unknown date";
+    return entry.entry_date || "Unknown date";
   }
 
   return date.toLocaleDateString("en-US", {
@@ -109,6 +108,29 @@ function formatEntryDate(entry) {
     month: "short",
     day: "numeric",
   });
+}
+
+// -----------------------------
+// Local date helpers
+// -----------------------------
+// IMPORTANT:
+// Do NOT use toISOString().split("T")[0] for "today" because that uses UTC
+// and can flip to the next day in the evening for local users.
+function getLocalDateString(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getLocalDayBounds(date = new Date()) {
+  const start = new Date(date);
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
+
+  return { start, end };
 }
 
 // -----------------------------
@@ -173,8 +195,9 @@ renderMoodDisplay();
 // Database helpers
 // -----------------------------
 async function hasLoggedToday(userId) {
-  const today = new Date().toISOString().split("T")[0];
+  const today = getLocalDateString();
 
+  // Prefer entry_date because it represents the user's intended local day.
   const { data, error } = await supabase
     .from("mood_entries")
     .select("id")
@@ -182,9 +205,7 @@ async function hasLoggedToday(userId) {
     .eq("entry_date", today)
     .limit(1);
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   return Array.isArray(data) && data.length > 0;
 }
@@ -198,29 +219,27 @@ async function logMoodEntry({
   anxietyLevel,
   sleepHours,
 }) {
-  const today = new Date().toISOString().split("T")[0];
+  const today = getLocalDateString();
+
+  const payload = {
+    user_id: userId,
+    mood_rating: moodRating,
+    mood_label: moodLabel,
+    note: note || null,
+    entry_date: today,
+    energy_level: energyLevel ?? null,
+    anxiety_level: anxietyLevel ?? null,
+    sleep_hours: sleepHours ?? null,
+    logged_at: new Date().toISOString(), // keep full timestamp for history ordering
+  };
 
   const { data, error } = await supabase
     .from("mood_entries")
-    .insert([
-      {
-        user_id: userId,
-        mood_rating: moodRating,
-        mood_label: moodLabel,
-        note: note || null,
-        entry_date: today,
-        energy_level: energyLevel ?? null,
-        anxiety_level: anxietyLevel ?? null,
-        sleep_hours: sleepHours ?? null,
-        logged_at: new Date().toISOString(),
-      },
-    ])
+    .insert([payload])
     .select()
     .single();
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   return data;
 }
@@ -236,29 +255,59 @@ async function getMoodHistory(userId, limit = 14) {
     .order("created_at", { ascending: false })
     .limit(limit);
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   return data || [];
+}
+
+// Optional fallback checker in case older rows do not have entry_date set correctly.
+// Not required for normal use, but helpful if your table has mixed old data.
+async function hasLoggedTodayByTimestamp(userId) {
+  const { start, end } = getLocalDayBounds();
+
+  const { data, error } = await supabase
+    .from("mood_entries")
+    .select("id")
+    .eq("user_id", userId)
+    .gte("logged_at", start.toISOString())
+    .lt("logged_at", end.toISOString())
+    .limit(1);
+
+  if (error) throw error;
+
+  return Array.isArray(data) && data.length > 0;
 }
 
 // -----------------------------
 // Already logged today check
 // -----------------------------
-let alreadyDone = false;
+async function refreshTodayStatus() {
+  let alreadyDone = false;
 
-try {
-  alreadyDone = await hasLoggedToday(user.id);
-} catch (err) {
-  console.error("Could not check today's mood status:", err);
+  try {
+    alreadyDone = await hasLoggedToday(user.id);
+
+    // Fallback for older records if needed
+    if (!alreadyDone) {
+      alreadyDone = await hasLoggedTodayByTimestamp(user.id);
+    }
+  } catch (err) {
+    console.error("Could not check today's mood status:", err);
+    alreadyDone = false;
+  }
+
+  if (alreadyDone) {
+    if (alreadyLogged) alreadyLogged.style.display = "block";
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Already logged today ✓";
+  } else {
+    if (alreadyLogged) alreadyLogged.style.display = "none";
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Log Mood";
+  }
 }
 
-if (alreadyDone) {
-  if (alreadyLogged) alreadyLogged.style.display = "block";
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Already logged today ✓";
-}
+await refreshTodayStatus();
 
 // -----------------------------
 // Submit mood
@@ -276,7 +325,8 @@ submitBtn.addEventListener("click", async () => {
   statusMsg.style.color = "#7A7870";
 
   try {
-    const alreadyLoggedToday = await hasLoggedToday(user.id);
+    const alreadyLoggedToday =
+      (await hasLoggedToday(user.id)) || (await hasLoggedTodayByTimestamp(user.id));
 
     if (alreadyLoggedToday) {
       statusMsg.textContent = "You already logged your mood today.";
@@ -299,9 +349,11 @@ submitBtn.addEventListener("click", async () => {
     statusMsg.textContent = "✓ Mood logged! Great job checking in.";
     statusMsg.style.color = "#3D6B35";
     submitBtn.textContent = "Logged today ✓";
+
     if (alreadyLogged) alreadyLogged.style.display = "block";
 
     await loadHistory();
+    await refreshTodayStatus();
   } catch (err) {
     console.error("Mood submit error:", err);
     statusMsg.textContent = `Error: ${err.message}`;
@@ -344,8 +396,8 @@ async function loadHistory() {
           <div class="history-entry">
             <span class="h-emoji">${emoji}</span>
             <div class="h-info">
-              <strong>${label}</strong>
-              <span class="h-date">${dateText}</span>
+              <strong>${escHtml(label)}</strong>
+              <span class="h-date">${escHtml(dateText)}</span>
               ${extras ? `<span class="h-date">${escHtml(extras)}</span>` : ""}
               ${safeNote ? `<span class="h-note">${safeNote}</span>` : ""}
             </div>
