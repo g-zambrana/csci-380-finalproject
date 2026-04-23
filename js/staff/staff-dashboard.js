@@ -839,7 +839,7 @@ function attachEvents() {
   if (els.logoutBtn) {
     els.logoutBtn.addEventListener('click', async () => {
       await supabase.auth.signOut();
-      window.location.href = STAFF_LOGIN_PATH;
+      window.location.href = '/staff/login';
     });
   }
 
