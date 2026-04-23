@@ -576,18 +576,7 @@ function renderStats(profiles, therapists, appointments, moodEntries) {
     els.openAlertsSub.textContent = 'Unique mood entries created today';
   }
 
-  console.log('[staff-dashboard] total-clients debug', {
-    profilesCount: profiles.length,
-    userProfiles: profiles.filter(profile => isUserRole(profile.role)).length,
-    newUsersThisMonth: newUsersThisMonth.length,
-    userRows: profiles
-      .filter(profile => isUserRole(profile.role))
-      .map(profile => ({
-        id: profile.id,
-        role: profile.role,
-        created_at: profile.created_at,
-      })),
-  });
+
 }
 
 function renderUsersTable(profiles) {
