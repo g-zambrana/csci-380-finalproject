@@ -18,8 +18,6 @@
       --border: rgba(0,0,0,0.08);
       --text: #2A2724;
       --muted: #7A7870;
-      --danger: #C85C5C;
-      --warning: #C7963E;
       --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 0.5px rgba(0,0,0,0.05);
       --shadow-hover: 0 6px 18px rgba(0,0,0,0.10);
       --radius: 14px;
@@ -122,12 +120,6 @@
       color: #fff;
     }
 
-    .nav-item svg {
-      width: 15px;
-      height: 15px;
-      flex-shrink: 0;
-    }
-
     .sb-user {
       padding: 14px 18px;
       border-top: 1px solid rgba(255,255,255,0.10);
@@ -174,6 +166,7 @@
       flex: 1;
       padding: 28px 36px 48px;
       min-width: 0;
+      max-width: 980px;
     }
 
     .page-header {
@@ -214,61 +207,11 @@
       cursor: pointer;
     }
 
-    .staff-banner {
-      background: linear-gradient(135deg, var(--primary), #3E7057);
-      border-radius: var(--radius);
-      padding: 20px 22px;
-      margin-bottom: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      color: #fff;
-    }
-
-    .staff-banner-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .staff-banner-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      flex-shrink: 0;
-    }
-
-    .staff-banner h2 {
-      font-size: 18px;
-      margin-bottom: 4px;
-    }
-
-    .staff-banner p {
-      font-size: 13px;
-      color: rgba(255,255,255,0.86);
-      line-height: 1.5;
-    }
-
-    .banner-tag {
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      font-size: 12px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
     .stats-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
-      margin-bottom: 26px;
+      margin-bottom: 28px;
     }
 
     .stat-card {
@@ -302,233 +245,64 @@
       color: var(--muted);
     }
 
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 1.7fr 1fr;
-      gap: 16px;
-      align-items: start;
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
     }
 
-    .panel {
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .feature-card {
       background: var(--surface);
       border-radius: var(--radius);
+      padding: 20px;
       box-shadow: var(--shadow);
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .panel-title {
-      font-size: 15px;
-      font-weight: 700;
-    }
-
-    .panel-link {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--primary);
+      cursor: pointer;
       text-decoration: none;
-    }
-
-    .search-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-
-    .search-input,
-    .filter-select,
-    .note-textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 11px 12px;
-      font: inherit;
-      background: #fff;
-      color: var(--text);
-      outline: none;
-    }
-
-    .search-input {
-      flex: 1;
-      min-width: 220px;
-    }
-
-    .filter-select {
-      width: auto;
-      min-width: 150px;
-    }
-
-    .simple-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .simple-table th,
-    .simple-table td {
-      text-align: left;
-      padding: 11px 8px;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      vertical-align: top;
-      font-size: 13px;
-    }
-
-    .simple-table th {
-      color: var(--muted);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      font-weight: 700;
-    }
-
-    .user-meta {
+      color: inherit;
+      transition: box-shadow 0.15s, transform 0.15s;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 10px;
     }
 
-    .user-name {
-      font-weight: 700;
-      font-size: 13px;
+    .feature-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
     }
 
-    .user-email {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .badge {
-      display: inline-flex;
+    .feature-icon {
+      font-size: 28px;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 5px 9px;
-      border-radius: 999px;
-      font-size: 11px;
+    }
+
+    .feature-name {
+      font-size: 14px;
       font-weight: 700;
-      white-space: nowrap;
     }
 
-    .badge-success { background: #EAF6EE; color: #2E7D4F; }
-    .badge-warn    { background: #FFF5E6; color: #A06B13; }
-    .badge-danger  { background: #FDECEC; color: #B94A48; }
-    .badge-neutral { background: #F2F2F2; color: #666; }
-
-    .alert-list,
-    .activity-list,
-    .note-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .alert-item,
-    .activity-item,
-    .note-item {
-      border: 1px solid rgba(0,0,0,0.06);
-      border-radius: 12px;
-      padding: 12px;
-      background: #fff;
-    }
-
-    .alert-item {
-      border-left: 4px solid #D9534F;
-      background: #FFFDFD;
-    }
-
-    .alert-head,
-    .activity-head,
-    .note-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-
-    .alert-title,
-    .activity-title,
-    .note-title {
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    .small-time {
-      font-size: 11px;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .alert-body,
-    .activity-body,
-    .note-body {
+    .feature-desc {
       font-size: 12px;
       color: var(--muted);
-      line-height: 1.5;
+      line-height: 1.45;
     }
 
-    .quick-note-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .note-textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .btn-primary {
-      align-self: flex-start;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font: inherit;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .mini-stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .mini-stat {
-      padding: 12px;
-      border-radius: 12px;
-      background: var(--accent-soft);
-    }
-
-    .mini-stat-label {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 5px;
-      font-weight: 700;
-    }
-
-    .mini-stat-value {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    .empty-state {
-      color: var(--muted);
-      font-size: 13px;
-      padding: 8px 0;
-    }
+    .ic-reports   { background: #E8F5E9; }
+    .ic-therapist { background: #E3F2FD; }
+    .ic-alerts    { background: #FFF3E0; }
 
     .status-message {
       display: none;
@@ -555,7 +329,7 @@
       border: 1px solid rgba(46, 125, 79, 0.2);
     }
 
-    hr{
+    hr {
       border: none;
       border-top: 1px solid rgba(255,255,255,0.10);
       margin: 8px 0;
@@ -564,10 +338,6 @@
     @media (max-width: 1180px) {
       .stats-row {
         grid-template-columns: repeat(2, 1fr);
-      }
-
-      .dashboard-grid {
-        grid-template-columns: 1fr;
       }
     }
 
@@ -587,30 +357,19 @@
         padding: 22px 18px 34px;
       }
 
-      .page-header,
-      .staff-banner {
+      .page-header {
         flex-direction: column;
         align-items: flex-start;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 640px) {
-      .stats-row,
-      .mini-stats {
+      .stats-row {
         grid-template-columns: 1fr;
-      }
-
-      .search-row {
-        flex-direction: column;
-      }
-
-      .filter-select {
-        width: 100%;
-      }
-
-      .simple-table {
-        display: block;
-        overflow-x: auto;
       }
     }
   </style>
@@ -632,14 +391,13 @@
 
     <div class="sb-nav">
       <div class="sb-label">Overview</div>
-
       <a class="nav-item active" href="/staff-dashboard">Dashboard</a>
-      <a class="nav-item" href="/staff-reports">Reports</a>
+      <a class="nav-item" href="/staff/reports">Reports</a>
       <hr>
-      <a class="nav-item" href="/staff-therapists">Therapists</a>
+      <a class="nav-item" href="/staff/therapist">Therapists</a>
       <hr>
       <div class="sb-label" style="margin-top: 6px;">System</div>
-      <a class="nav-item" href="/staff-alerts">Alerts</a>
+      <a class="nav-item" href="/staff/alerts">Alerts</a>
     </div>
 
     <div class="sb-user">
@@ -665,26 +423,25 @@
       </div>
     </div>
 
-
     <section class="stats-row">
       <div class="stat-card">
         <div class="stat-label">Total Clients</div>
         <div class="stat-value" id="total-users">—</div>
         <div class="stat-sub" id="total-users-sub">New user accounts this month</div>
       </div>
-    
+
       <div class="stat-card">
         <div class="stat-label">Upcoming Appointments</div>
         <div class="stat-value" id="upcoming-appts">—</div>
         <div class="stat-sub" id="upcoming-appts-sub">Appointments scheduled this month</div>
       </div>
-    
+
       <div class="stat-card">
         <div class="stat-label">Active Therapists</div>
         <div class="stat-value" id="active-therapists">—</div>
-        <div class="stat-sub" id="active-therapists-sub">Therapists booked this week</div>
+        <div class="stat-sub" id="active-therapists-sub">Therapists on schedule this week</div>
       </div>
-    
+
       <div class="stat-card">
         <div class="stat-label">Activity Report</div>
         <div class="stat-value" id="open-alerts">—</div>
@@ -692,144 +449,28 @@
       </div>
     </section>
 
-    <section class="dashboard-grid">
-      <div>
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">User overview</div>
-            <a class="panel-link" href="/staff-users">View all</a>
-          </div>
+    <section>
+      <div class="section-title">Quick Access</div>
 
-          <div class="search-row">
-            <input class="search-input" type="text" placeholder="Search by name or email" id="user-search" />
-            <select class="filter-select" id="user-filter">
-              <option value="all">All users</option>
-              <option value="needs_review">Needs review</option>
-              <option value="recent_signups">Recent signups</option>
-              <option value="high_anxiety">High anxiety</option>
-            </select>
-          </div>
+      <div class="feature-grid">
+        <a class="feature-card" href="/staff/reports">
+          <div class="feature-icon ic-reports">📊</div>
+          <div class="feature-name">Reports</div>
+          <div class="feature-desc">Review platform insights, staff metrics, and dashboard summaries.</div>
+        </a>
 
-          <table class="simple-table">
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Role</th>
-                <th>Energy</th>
-                <th>Anxiety</th>
-                <th>Sleep</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="users-table-body">
-              <tr><td colspan="6">Loading users...</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <a class="feature-card" href="/staff/therapist">
+          <div class="feature-icon ic-therapist">🩺</div>
+          <div class="feature-name">Therapists</div>
+          <div class="feature-desc">Therapist portal for bookings, and care team details.</div>
+        </a>
 
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">Upcoming appointments</div>
-            <a class="panel-link" href="/staff-appointments">Manage</a>
-          </div>
-
-          <table class="simple-table">
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Therapist</th>
-                <th>Date</th>
-                <th>Format</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="appointments-table-body">
-              <tr><td colspan="5">Loading appointments...</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">Recent staff activity</div>
-            <a class="panel-link" href="/staff-logs">Open log</a>
-          </div>
-
-          <div class="activity-list" id="activity-list">
-            <div class="activity-item">
-              <div class="activity-body">Loading recent activity...</div>
-            </div>
-          </div>
-        </div>
+        <a class="feature-card" href="/staff/alerts">
+          <div class="feature-icon ic-alerts">🚨</div>
+          <div class="feature-name">Alerts</div>
+          <div class="feature-desc">Check important issues, flagged activity, and urgent staff updates.</div>
+        </a>
       </div>
-
-      <aside>
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">Open alerts</div>
-            <a class="panel-link" href="/staff-alerts">Review all</a>
-          </div>
-
-          <div class="alert-list" id="alert-list">
-            <div class="alert-item">
-              <div class="alert-body">Loading alerts...</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">Quick note</div>
-          </div>
-
-          <form class="quick-note-form" id="quick-note-form">
-            <select class="filter-select" id="note-user">
-              <option value="">Select user</option>
-            </select>
-
-            <textarea class="note-textarea" id="note-body" placeholder="Write an internal staff note..."></textarea>
-            <button class="btn-primary" type="submit">Save note</button>
-          </form>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">Care snapshot</div>
-          </div>
-
-          <div class="mini-stats">
-            <div class="mini-stat">
-              <div class="mini-stat-label">Avg Mood</div>
-              <div class="mini-stat-value" id="avg-mood">—</div>
-            </div>
-            <div class="mini-stat">
-              <div class="mini-stat-label">Avg Sleep</div>
-              <div class="mini-stat-value" id="avg-sleep">—</div>
-            </div>
-            <div class="mini-stat">
-              <div class="mini-stat-label">High Anxiety</div>
-              <div class="mini-stat-value" id="high-anxiety-count">—</div>
-            </div>
-            <div class="mini-stat">
-              <div class="mini-stat-label">Notes Today</div>
-              <div class="mini-stat-value" id="notes-today">—</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">Recent notes</div>
-            <a class="panel-link" href="/staff-notes">See more</a>
-          </div>
-
-          <div class="note-list" id="recent-notes-list">
-            <div class="note-item">
-              <div class="note-body">Loading recent notes...</div>
-            </div>
-          </div>
-        </div>
-      </aside>
     </section>
   </main>
 
