@@ -4,7 +4,7 @@
 import { supabase, requireAuth } from '../supabase.js';
 
 const PROFILES_TABLE = 'profiles';
-const STAFF_LOGIN_PATH = '/staff-login';
+const STAFF_LOGIN_PATH = '/staff/login';
 const ALLOWED_ROLES = ['staff', 'admin'];
 
 const state = {
@@ -839,7 +839,7 @@ function attachEvents() {
   if (els.logoutBtn) {
     els.logoutBtn.addEventListener('click', async () => {
       await supabase.auth.signOut();
-      window.location.href = '/staff/login';
+      window.location.href = STAFF_LOGIN_PATH;
     });
   }
 
