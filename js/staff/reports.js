@@ -3,7 +3,7 @@
 import { supabase, requireAuth } from "../supabase.js";
 
 const user = await requireAuth();
-const STAFF_LOGIN_PATH = '/staff/login';
+const STAFF_LOGIN_PATH = "/pages/staff/login.html";
 if (!user) throw new Error("Not authenticated");
 
 const usersTableBody = document.querySelector("#users-table-body");
@@ -431,8 +431,20 @@ async function loadNoteRecipients() {
 }
 
 function setupLogout() {
+  if (!logoutBtn) {
+    console.error("Logout button not found.");
+    return;
+  }
+
   logoutBtn.addEventListener("click", async () => {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Error signing out:", error);
+      alert("Could not sign out. Please try again.");
+      return;
+    }
+
     window.location.href = STAFF_LOGIN_PATH;
   });
 }
