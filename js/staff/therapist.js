@@ -99,13 +99,20 @@ async function loadCurrentProfile() {
 }
 
 async function guardTherapistAccess(profile) {
-  if (!profile || profile.role !== "therapist") {
+  const allowedStaffPortalRoles = ["staff", "admin", "therapist"];
+
+  if (!profile || !allowedStaffPortalRoles.includes(profile.role)) {
+    window.location.href = "/home";
+    return;
+  }
+
+  if (profile.role !== "therapist") {
     if (main) {
       main.innerHTML = `
         <div class="page-header">
           <div>
-            <div class="page-greet">Access Restricted</div>
-            <div class="page-date">Only therapists can view this page.</div>
+            <div class="page-greet">Therapist Access Required</div>
+            <div class="page-date">Only therapists can view therapist patient data.</div>
           </div>
 
           <div class="header-actions">
@@ -115,11 +122,11 @@ async function guardTherapistAccess(profile) {
 
         <div class="panel">
           <div class="panel-header">
-            <div class="panel-title">Therapist Access Required</div>
+            <div class="panel-title">Only Therapists Can View This Page</div>
           </div>
 
           <p style="font-size: 14px; color: var(--muted); line-height: 1.6;">
-            Only therapists can view this page. Please sign in with a therapist account to access patient care information.
+            Your account is allowed to access the staff portal, but this specific page only displays data for therapist accounts.
           </p>
         </div>
       `;
@@ -134,7 +141,7 @@ async function guardTherapistAccess(profile) {
       }
     }
 
-    throw new Error("Only therapists can view this page.");
+    throw new Error("Only therapists can view therapist patient data.");
   }
 }
 
