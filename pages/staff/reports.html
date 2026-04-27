@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/x-icon" href="/images/herb.svg" />
-  <title>Reports — MindBloom</title>
+  <title>Staff Dashboard — MindBloom</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
 
   <style>
@@ -13,11 +13,15 @@
       --surface: #FFFFFF;
       --sidebar: #244836;
       --primary: #2F5D46;
+      --accent: #5E9D79;
       --accent-soft: #E7F3EC;
       --border: rgba(0,0,0,0.08);
       --text: #2A2724;
       --muted: #7A7870;
+      --danger: #C85C5C;
+      --warning: #C7963E;
       --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 0.5px rgba(0,0,0,0.05);
+      --shadow-hover: 0 6px 18px rgba(0,0,0,0.10);
       --radius: 14px;
     }
 
@@ -97,8 +101,9 @@
       display: flex;
       align-items: center;
       gap: 9px;
-      padding: 10px;
+      padding: 10px 10px;
       border-radius: 8px;
+      cursor: pointer;
       color: rgba(255,255,255,0.66);
       font-size: 13px;
       font-weight: 500;
@@ -115,6 +120,12 @@
     .nav-item.active {
       background: rgba(255,255,255,0.15);
       color: #fff;
+    }
+
+    .nav-item svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
     }
 
     .sb-user {
@@ -149,13 +160,6 @@
       font-size: 11px;
       color: rgba(255,255,255,0.45);
       margin-top: 1px;
-      word-break: break-word;
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid rgba(255,255,255,0.10);
-      margin: 8px 0;
     }
 
     .main {
@@ -185,6 +189,43 @@
       margin-top: 5px;
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-icon {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--muted);
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .notif-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #D9534F;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .btn-logout {
       padding: 8px 14px;
       background: rgba(0,0,0,0.06);
@@ -196,29 +237,54 @@
       cursor: pointer;
     }
 
-    .status-message {
-      display: none;
-      margin-bottom: 16px;
-      padding: 12px 14px;
-      border-radius: 10px;
+    .staff-banner {
+      background: linear-gradient(135deg, var(--primary), #3E7057);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: #fff;
+    }
+
+    .staff-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .staff-banner-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .staff-banner h2 {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .staff-banner p {
       font-size: 13px;
-      font-weight: 600;
+      color: rgba(255,255,255,0.86);
+      line-height: 1.5;
     }
 
-    .status-message.show {
-      display: block;
-    }
-
-    .status-message.error {
-      background: #FDECEC;
-      color: #B94A48;
-      border: 1px solid rgba(185, 74, 72, 0.2);
-    }
-
-    .status-message.success {
-      background: #EAF6EE;
-      color: #2E7D4F;
-      border: 1px solid rgba(46, 125, 79, 0.2);
+    .banner-tag {
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     .stats-row {
@@ -257,32 +323,308 @@
     .stat-sub {
       font-size: 12px;
       color: var(--muted);
-      line-height: 1.4;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 26px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .feature-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feature-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .feature-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .ic-users      { background: #EAF4FF; }
+    .ic-appts      { background: #F3EAFD; }
+    .ic-therapists { background: #E8F5E9; }
+    .ic-notes      { background: #FFF6E7; }
+    .ic-alerts     { background: #FFECEC; }
+    .ic-logs       { background: #F1F1F1; }
+    .ic-journals   { background: #EEF7F0; }
+    .ic-reports    { background: #ECF3F8; }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.7fr 1fr;
+      gap: 16px;
+      align-items: start;
     }
 
     .panel {
       background: var(--surface);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 20px;
+      padding: 18px;
       margin-bottom: 16px;
     }
 
-    .panel-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 8px;
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
-    .panel-text {
+    .panel-title {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .panel-link {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .search-input,
+    .filter-select,
+    .note-textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: inherit;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .filter-select {
+      width: auto;
+      min-width: 150px;
+    }
+
+    .simple-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .simple-table th,
+    .simple-table td {
+      text-align: left;
+      padding: 11px 8px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      vertical-align: top;
       font-size: 13px;
+    }
+
+    .simple-table th {
       color: var(--muted);
-      line-height: 1.6;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-weight: 700;
+    }
+
+    .user-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .user-name {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .user-email {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge-success { background: #EAF6EE; color: #2E7D4F; }
+    .badge-warn    { background: #FFF5E6; color: #A06B13; }
+    .badge-danger  { background: #FDECEC; color: #B94A48; }
+    .badge-neutral { background: #F2F2F2; color: #666; }
+
+    .alert-list,
+    .activity-list,
+    .note-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .alert-item,
+    .activity-item,
+    .note-item {
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .alert-item {
+      border-left: 4px solid #D9534F;
+      background: #FFFDFD;
+    }
+
+    .alert-head,
+    .activity-head,
+    .note-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .alert-title,
+    .activity-title,
+    .note-title {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .small-time {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .alert-body,
+    .activity-body,
+    .note-body {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .quick-note-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .note-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .btn-primary {
+      align-self: flex-start;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .mini-stat {
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+    }
+
+    .mini-stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+
+    .mini-stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      margin: 8px 0;
     }
 
     @media (max-width: 1180px) {
-      .stats-row {
+      .stats-row,
+      .feature-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -302,20 +644,43 @@
         padding: 22px 18px 34px;
       }
 
-      .page-header {
+      .page-header,
+      .staff-banner {
         flex-direction: column;
         align-items: flex-start;
       }
+
+      hr {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      margin: 8px 0;
+    }
     }
 
     @media (max-width: 640px) {
-      .stats-row {
+      .stats-row,
+      .feature-grid,
+      .mini-stats {
         grid-template-columns: 1fr;
       }
+
+      .search-row {
+        flex-direction: column;
+      }
+
+      .filter-select {
+        width: 100%;
+      }
+
+      .simple-table {
+        display: block;
+        overflow-x: auto;
+      }
+
+      
     }
   </style>
 </head>
-
 <body>
   <nav class="sidebar">
     <a class="sb-logo" href="/staff-dashboard">
@@ -333,12 +698,12 @@
     <div class="sb-nav">
       <div class="sb-label">Overview</div>
 
-      <a class="nav-item" href="/staff-dashboard">Dashboard</a>
-      <a class="nav-item active" href="/staff/reports">Reports</a>
+      <a class="nav-item" href="/pages/staff/staff-dashboard.html">Dashboard</a>
+      <a class="nav-item active" href="/pages/staff/reports">Reports</a>
 
       <hr>
 
-      <a class="nav-item" href="/staff/therapist">Therapists</a>
+      <a class="nav-item" href="/pages/staff/therapist">Therapists</a>
 
       <hr>
 
@@ -356,12 +721,10 @@
   </nav>
 
   <main class="main">
-    <div id="status-message" class="status-message"></div>
-
     <div class="page-header">
       <div>
         <div class="page-greet">Reports</div>
-        <div class="page-date" id="today-date">Loading report date...</div>
+        <div class="page-date" id="today-date">Operations overview for today</div>
       </div>
 
       <div class="header-actions">
@@ -369,38 +732,119 @@
       </div>
     </div>
 
-    <section class="stats-row">
-      <div class="stat-card">
-        <div class="stat-label">New Clients</div>
-        <div class="stat-value" id="total-users">—</div>
-        <div class="stat-sub" id="total-users-sub">Loading client data...</div>
+    <section class="dashboard-grid">
+      <div>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">User overview</div>
+            <a class="panel-link" href="/staff-users">View all</a>
+          </div>
+
+          <div class="search-row">
+            <input class="search-input" type="text" placeholder="Search by name or email" id="user-search" />
+            <select class="filter-select" id="user-filter">
+              <option>All users</option>
+              <option>Needs review</option>
+              <option>Recent signups</option>
+              <option>High anxiety</option>
+            </select>
+          </div>
+
+          <table class="simple-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Account Created</th>
+                <th>Last Mood-Entry Date</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body">
+              <tr>
+                <td colspan="4">Loading users...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Upcoming appointments</div>
+            <a class="panel-link" href="/staff-appointments">Manage</a>
+          </div>
+
+          <table class="simple-table">
+            <thead>
+              <tr>
+                <th>Therapist</th>
+                <th>Date</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="appointments-table-body">
+              <tr>
+                <td colspan="3">Loading appointments...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Recent staff activity</div>
+            <a class="panel-link" href="/staff-logs">Open log</a>
+          </div>
+
+          <div class="activity-list" id="activity-list">
+            <div class="activity-item">
+              <div class="activity-body">Loading activity...</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="stat-card">
-        <div class="stat-label">Appointments</div>
-        <div class="stat-value" id="upcoming-appts">—</div>
-        <div class="stat-sub" id="upcoming-appts-sub">Loading appointment data...</div>
-      </div>
+      <aside>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Open alerts</div>
+            <a class="panel-link" href="/staff-alerts">Review all</a>
+          </div>
 
-      <div class="stat-card">
-        <div class="stat-label">Active Therapists</div>
-        <div class="stat-value" id="active-therapists">—</div>
-        <div class="stat-sub" id="active-therapists-sub">Loading therapist data...</div>
-      </div>
+          <div class="alert-list" id="alert-list">
+            <div class="alert-item">
+              <div class="alert-body">Loading alerts...</div>
+            </div>
+          </div>
+        </div>
 
-      <div class="stat-card">
-        <div class="stat-label">Mood Activity</div>
-        <div class="stat-value" id="open-alerts">—</div>
-        <div class="stat-sub" id="open-alerts-sub">Loading mood report...</div>
-      </div>
-    </section>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Quick note</div>
+          </div>
 
-    <section class="panel">
-      <div class="panel-title">Report Summary</div>
-      <p class="panel-text">
-        This page displays live reporting information from the MindBloom database, including new client accounts,
-        scheduled appointments, therapist activity, mood tracker usage, journal activity, and staff notes.
-      </p>
+          <form class="quick-note-form" id="quick-note-form">
+            <select class="filter-select" id="note-user">
+              <option value="">Loading users...</option>
+            </select>
+
+            <textarea class="note-textarea" id="note-body" placeholder="Write an internal staff note..."></textarea>
+            <button class="btn-primary" type="submit">Save note</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Recent notes</div>
+            <a class="panel-link" href="/staff-notes">See more</a>
+          </div>
+
+          <div class="note-list" id="recent-notes-list">
+            <div class="note-item">
+              <div class="note-body">Loading notes...</div>
+            </div>
+          </div>
+        </div>
+      </aside>
     </section>
   </main>
 
