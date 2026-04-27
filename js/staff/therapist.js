@@ -148,8 +148,8 @@ async function guardTherapistAccess(profile) {
 async function loadTherapistRow() {
   const { data, error } = await supabase
     .from("therapists")
-    .select("id, user_id, status")
-    .eq("user_id", user.id)
+    .select("id, user_id, profile_id, status")
+    .or(`user_id.eq.${user.id},profile_id.eq.${user.id}`)
     .maybeSingle();
 
   if (error) {
@@ -221,19 +221,16 @@ async function renderUsersTable(filteredPatients = allPatients) {
 }
 
 async function renderAppointments() {
-  const now = new Date().toISOString();
-
   const { data: appointments, error } = await supabase
     .from("appointments")
-    .select("id, user_id, therapist_id, scheduled_at, status, format")
+    .select("id, user_id, therapist_id, scheduled_at, status, format, notes_client")
     .eq("therapist_id", therapistId)
-    .gte("scheduled_at", now)
-    .in("status", ["scheduled", "pending"])
-    .order("scheduled_at", { ascending: true })
-    .limit(8);
+    .in("status", ["scheduled", "completed", "cancelled"])
+    .order("scheduled_at", { ascending: false })
+    .limit(12);
 
   if (error) {
-    console.error("Error loading upcoming appointments:", error);
+    console.error("Error loading therapist appointments:", error);
     appointmentsTableBody.innerHTML = `
       <tr>
         <td colspan="3">Could not load appointments.</td>
@@ -245,23 +242,29 @@ async function renderAppointments() {
   if (!appointments.length) {
     appointmentsTableBody.innerHTML = `
       <tr>
-        <td colspan="3">No upcoming appointments.</td>
+        <td colspan="3">No appointments found.</td>
       </tr>
     `;
     return;
   }
 
-  const therapistName = getProfileName(therapistProfile, "Current therapist");
-
   appointmentsTableBody.innerHTML = appointments
     .map((appointment) => {
       const dateObj = new Date(appointment.scheduled_at);
+      const patient = allPatients.find((p) => p.id === appointment.user_id);
+      const patientName = getProfileName(patient, "Unknown patient");
 
       return `
         <tr>
-          <td>${escapeHTML(therapistName)}</td>
+          <td>${escapeHTML(patientName)}</td>
           <td>${formatDate(appointment.scheduled_at)}</td>
-          <td>${formatTime(dateObj)}</td>
+          <td>
+            ${formatTime(dateObj)}
+            <br>
+            <span class="badge ${getAppointmentBadgeClass(appointment.status)}">
+              ${escapeHTML(appointment.status)}
+            </span>
+          </td>
         </tr>
       `;
     })
@@ -676,6 +679,17 @@ function timeAgo(dateValue) {
 
   const days = Math.floor(hours / 24);
   return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
+
+function getAppointmentBadgeClass(status) {
+  const normalized = String(status || "").toLowerCase();
+
+  if (normalized === "scheduled") return "badge-success";
+  if (normalized === "completed") return "badge-neutral";
+  if (normalized === "cancelled") return "badge-danger";
+
+  return "badge-neutral";
 }
 
 function escapeHTML(value) {
