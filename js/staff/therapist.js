@@ -165,7 +165,7 @@ async function loadPatientIdsForTherapist() {
     .from("appointments")
     .select("user_id")
     .eq("therapist_id", therapistId)
-    .in("status", ["scheduled", "completed", "cancelled", "no_show", "pending"])
+    .in("status", ["scheduled", "completed", "cancelled"])
     .not("user_id", "is", null);
 
   if (error) {
