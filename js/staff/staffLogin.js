@@ -9,6 +9,10 @@ const message = document.getElementById('message');
 const ALLOWED_ROLES = ['staff', 'admin', 'therapist'];
 const STAFF_DASHBOARD_PATH = '/staff/staff-dashboard';
 
+function normalizeRole(role) {
+  return String(role || '').trim().toLowerCase();
+}
+
 function setMessage(text, color = '') {
   message.textContent = text;
   message.style.color = color;
@@ -19,15 +23,22 @@ async function getUserRole(userId) {
     .from('profiles')
     .select('role')
     .eq('id', userId)
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
-  return data?.role ?? null;
+
+  return normalizeRole(data?.role);
 }
 
-// Redirect already-logged-in users only if they are valid staff
+function isAllowedStaffPortalRole(role) {
+  return ALLOWED_ROLES.includes(normalizeRole(role));
+}
+
+// Redirect already-logged-in users only if they are valid staff portal users
 (async () => {
   try {
+    document.body.style.visibility = 'hidden';
+
     const { data, error } = await supabase.auth.getSession();
 
     if (error) {
@@ -45,13 +56,13 @@ async function getUserRole(userId) {
 
     const role = await getUserRole(session.user.id);
 
-    if (ALLOWED_ROLES.includes(role)) {
+    if (isAllowedStaffPortalRole(role)) {
       window.location.replace(STAFF_DASHBOARD_PATH);
       return;
     }
 
     await supabase.auth.signOut();
-    setMessage('This portal is only for authorized staff accounts.', '#c0392b');
+    setMessage('This portal is only for staff, admin, or therapist accounts.', '#c0392b');
     document.body.style.visibility = 'visible';
   } catch (err) {
     console.error('Startup auth check failed:', err);
@@ -66,7 +77,6 @@ form.addEventListener('submit', async (event) => {
   const password = passwordInput.value;
 
   setMessage('Logging in...');
-  message.style.color = '';
 
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -89,7 +99,9 @@ form.addEventListener('submit', async (event) => {
 
     const role = await getUserRole(user.id);
 
-    if (!ALLOWED_ROLES.includes(role)) {
+    console.log('Staff portal login role:', role);
+
+    if (!isAllowedStaffPortalRole(role)) {
       await supabase.auth.signOut();
       setMessage('Access denied. Only staff, admin, or therapist accounts can sign in here.', '#c0392b');
       return;
